@@ -1,0 +1,328 @@
+/**
+ * Configuration options for the OrcaRail client
+ */
+export interface OrcaRailConfig {
+  /**
+   * Base URL for the OrcaRail API
+   * @default "https://api.orcarail.com/api/v1"
+   */
+  baseUrl?: string;
+
+  /**
+   * API version
+   * @default "v1"
+   */
+  apiVersion?: string;
+
+  /**
+   * Request timeout in milliseconds
+   * @default 30000
+   */
+  timeout?: number;
+}
+
+/**
+ * Parameters for creating a Payment Intent
+ */
+export interface PaymentIntentCreateParams {
+  /**
+   * Amount to charge (e.g., "100.00")
+   */
+  amount: string;
+
+  /**
+   * Currency code (e.g., "usd")
+   */
+  currency: string;
+
+  /**
+   * Payment method types (must include "crypto")
+   * @default ["crypto"]
+   */
+  payment_method_types?: string[];
+
+  /**
+   * Token ID (e.g., USDC, USDT)
+   */
+  tokenId: number;
+
+  /**
+   * Network ID (e.g., Ethereum, Polygon)
+   */
+  networkId: number;
+
+  /**
+   * Return URL after payment completion
+   */
+  return_url: string;
+
+  /**
+   * Cancel URL if payment is canceled
+   */
+  cancel_url?: string | null;
+
+  /**
+   * Payment description
+   */
+  description?: string;
+
+  /**
+   * Custom metadata object
+   */
+  metadata?: Record<string, unknown> | null;
+
+  /**
+   * ISO 8601 expiration timestamp
+   */
+  expires_at?: string | null;
+}
+
+/**
+ * Parameters for updating a Payment Intent
+ */
+export interface PaymentIntentUpdateParams {
+  /**
+   * Updated amount
+   */
+  amount?: string;
+
+  /**
+   * Updated currency
+   */
+  currency?: string;
+
+  /**
+   * Updated payment method types
+   */
+  payment_method_types?: string[];
+
+  /**
+   * Updated token ID
+   */
+  tokenId?: number;
+
+  /**
+   * Updated network ID
+   */
+  networkId?: number;
+
+  /**
+   * Updated return URL
+   */
+  return_url?: string;
+
+  /**
+   * Updated cancel URL
+   */
+  cancel_url?: string | null;
+
+  /**
+   * Updated description
+   */
+  description?: string;
+
+  /**
+   * Updated metadata
+   */
+  metadata?: Record<string, unknown> | null;
+
+  /**
+   * Updated expiration timestamp
+   */
+  expires_at?: string | null;
+}
+
+/**
+ * Parameters for confirming a Payment Intent
+ */
+export interface PaymentIntentConfirmParams {
+  /**
+   * Client secret for the payment intent (from create/retrieve response)
+   */
+  client_secret: string;
+
+  /**
+   * Return URL after payment completion
+   */
+  return_url: string;
+}
+
+/**
+ * Payment Link object
+ */
+export interface PaymentLink {
+  /**
+   * Payment link ID
+   */
+  id: number;
+
+  /**
+   * Unique slug
+   */
+  unique_slug?: string;
+
+  /**
+   * Payment link URL
+   */
+  link: string;
+}
+
+/**
+ * Latest transaction details
+ */
+export interface LatestTransaction {
+  /**
+   * Transaction ID
+   */
+  id: string;
+
+  /**
+   * Transaction status
+   */
+  status: string;
+
+  /**
+   * Transaction hash
+   */
+  hash?: string;
+
+  /**
+   * Transaction amount
+   */
+  amount?: string;
+
+  /**
+   * Transaction address
+   */
+  address?: string;
+}
+
+/**
+ * Payment Intent object
+ */
+export interface PaymentIntent {
+  /**
+   * Payment Intent ID (e.g., "pi_1234567890")
+   */
+  id: string;
+
+  /**
+   * Object type (always "payment_intent")
+   */
+  object: string;
+
+  /**
+   * Amount to charge
+   */
+  amount: string;
+
+  /**
+   * Currency code
+   */
+  currency: string;
+
+  /**
+   * Current status
+   */
+  status: string;
+
+  /**
+   * Payment method types
+   */
+  payment_method_types: string[];
+
+  /**
+   * Client secret used to confirm the payment intent from the frontend
+   */
+  client_secret?: string;
+
+  /**
+   * Checkout URL (clean URL without secrets)
+   */
+  checkout_url?: string;
+
+  /**
+   * Return URL
+   */
+  return_url: string;
+
+  /**
+   * Cancel URL
+   */
+  cancel_url?: string | null;
+
+  /**
+   * Payment description
+   */
+  description?: string | null;
+
+  /**
+   * Custom metadata
+   */
+  metadata?: Record<string, unknown> | null;
+
+  /**
+   * Payment link object
+   */
+  payment_link?: PaymentLink;
+
+  /**
+   * Expiration timestamp
+   */
+  expiresAt?: string;
+
+  /**
+   * Latest transaction details (for complete intents)
+   */
+  latestTransaction?: LatestTransaction;
+
+  /**
+   * Creation timestamp
+   */
+  createdAt: string;
+
+  /**
+   * Last update timestamp
+   */
+  updatedAt: string;
+}
+
+/**
+ * Webhook event types
+ */
+export type WebhookEventType =
+  | 'payment_intent.complete'
+  | 'payment_intent.processing'
+  | 'payment_intent.canceled'
+  | 'payment_intent.requires_payment_method'
+  | 'payment_intent.requires_confirmation';
+
+/**
+ * Webhook event data object
+ */
+export interface WebhookEventData {
+  /**
+   * Payment Intent object
+   */
+  object: PaymentIntent;
+}
+
+/**
+ * Webhook event structure
+ */
+export interface WebhookEvent {
+  /**
+   * Event type
+   */
+  type: WebhookEventType;
+
+  /**
+   * Event data
+   */
+  data: WebhookEventData;
+
+  /**
+   * Unix timestamp when the event was created
+   */
+  created: number;
+}
