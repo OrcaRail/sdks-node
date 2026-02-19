@@ -1,10 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { HttpClient } from '../src/client';
-import {
-  OrcaRailError,
-  OrcaRailAPIError,
-  OrcaRailAuthenticationError,
-} from '../src/errors';
+import { OrcaRailError, OrcaRailAPIError, OrcaRailAuthenticationError } from '../src/errors';
 
 // Mock global fetch
 const mockFetch = vi.fn();
@@ -77,9 +73,7 @@ describe('HttpClient', () => {
         }),
       });
 
-      await expect(client.get('/payment_intents')).rejects.toThrow(
-        OrcaRailAuthenticationError
-      );
+      await expect(client.get('/payment_intents')).rejects.toThrow(OrcaRailAuthenticationError);
     });
 
     it('should handle API errors', async () => {
@@ -95,9 +89,7 @@ describe('HttpClient', () => {
         }),
       });
 
-      await expect(client.get('/payment_intents')).rejects.toThrow(
-        OrcaRailAPIError
-      );
+      await expect(client.get('/payment_intents')).rejects.toThrow(OrcaRailAPIError);
     });
 
     it('should accept timeout configuration', () => {

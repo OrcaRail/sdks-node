@@ -71,11 +71,7 @@ export class OrcaRail {
    * @param apiSecret - Your OrcaRail API secret (e.g., "sk_live_xxx")
    * @param config - Optional configuration
    */
-  constructor(
-    apiKey: string,
-    apiSecret: string,
-    config?: OrcaRailConfig
-  ) {
+  constructor(apiKey: string, apiSecret: string, config?: OrcaRailConfig) {
     this.client = new HttpClient(apiKey, apiSecret, config);
     this.paymentIntents = new PaymentIntents(this.client);
     this.checkout = new Checkout(this.client);

@@ -42,14 +42,14 @@ export interface PaymentIntentCreateParams {
   payment_method_types?: string[];
 
   /**
-   * Token ID (e.g., USDC, USDT)
+   * Token ID (UUID, e.g., USDC, USDT)
    */
-  tokenId: number;
+  tokenId: string;
 
   /**
-   * Network ID (e.g., Ethereum, Polygon)
+   * Network ID (UUID, e.g., Ethereum, Polygon)
    */
-  networkId: number;
+  networkId: string;
 
   /**
    * Return URL after payment completion
@@ -97,14 +97,14 @@ export interface PaymentIntentUpdateParams {
   payment_method_types?: string[];
 
   /**
-   * Updated token ID
+   * Updated token ID (UUID)
    */
-  tokenId?: number;
+  tokenId?: string;
 
   /**
-   * Updated network ID
+   * Updated network ID (UUID)
    */
-  networkId?: number;
+  networkId?: string;
 
   /**
    * Updated return URL
@@ -152,9 +152,9 @@ export interface PaymentIntentConfirmParams {
  */
 export interface PaymentLink {
   /**
-   * Payment link ID
+   * Payment link ID (UUID)
    */
-  id: number;
+  id: string;
 
   /**
    * Unique slug
@@ -272,7 +272,7 @@ export interface PaymentIntent {
   expiresAt?: string;
 
   /**
-   * Latest transaction details (for complete intents)
+   * Latest transaction details (for completed intents)
    */
   latestTransaction?: LatestTransaction;
 
@@ -291,7 +291,7 @@ export interface PaymentIntent {
  * Webhook event types
  */
 export type WebhookEventType =
-  | 'payment_intent.complete'
+  | 'payment_intent.completed'
   | 'payment_intent.processing'
   | 'payment_intent.canceled'
   | 'payment_intent.requires_payment_method'

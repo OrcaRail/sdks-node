@@ -22,9 +22,7 @@ export class PaymentIntents {
    * @param params - Payment Intent creation parameters
    * @returns The created Payment Intent
    */
-  public async create(
-    params: PaymentIntentCreateParams
-  ): Promise<PaymentIntent> {
+  public async create(params: PaymentIntentCreateParams): Promise<PaymentIntent> {
     // Ensure payment_method_types defaults to ['crypto'] if empty
     const requestBody = {
       ...params,
@@ -34,11 +32,7 @@ export class PaymentIntents {
           : ['crypto'],
     };
 
-    return this.client.post<PaymentIntent>(
-      'payment_intents',
-      requestBody,
-      true
-    );
+    return this.client.post<PaymentIntent>('payment_intents', requestBody, true);
   }
 
   /**
@@ -87,10 +81,7 @@ export class PaymentIntents {
    *   return_url: 'https://yourapp.com/return',
    * });
    */
-  public async confirm(
-    id: string,
-    params: PaymentIntentConfirmParams
-  ): Promise<PaymentIntent> {
+  public async confirm(id: string, params: PaymentIntentConfirmParams): Promise<PaymentIntent> {
     const cleanId = id.startsWith('pi_') ? id : `pi_${id}`;
     const path = `payment_intents/${cleanId}/confirm`;
 
@@ -99,7 +90,7 @@ export class PaymentIntents {
 
   /**
    * Complete a Payment Intent (API: POST /payment_intents/:id/complete).
-   * Sets the intent to processing and fires the payment_intent.processing webhook.
+   * Sets the intent to processing; when payment is done, payment_intent.completed is sent.
    * Use when the user is redirected to your success/return URL (e.g. https://yourapp.com/success?payment_intent=pi_34).
    *
    * @param id - Payment Intent ID (e.g. "pi_34" or "34")
@@ -123,10 +114,7 @@ export class PaymentIntents {
    * @param params - Update parameters (all optional)
    * @returns The updated Payment Intent
    */
-  public async update(
-    id: string,
-    params: PaymentIntentUpdateParams
-  ): Promise<PaymentIntent> {
+  public async update(id: string, params: PaymentIntentUpdateParams): Promise<PaymentIntent> {
     const cleanId = id.startsWith('pi_') ? id : `pi_${id}`;
     const path = `payment_intents/${cleanId}`;
 

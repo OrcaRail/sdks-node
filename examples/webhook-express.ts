@@ -49,8 +49,8 @@ app.post('/webhooks/orcarail', (req, res) => {
 
     // Handle the event
     switch (event.type) {
-      case 'payment_intent.succeeded':
-        handlePaymentSucceeded(event);
+      case 'payment_intent.completed':
+        handlePaymentCompleted(event);
         break;
 
       case 'payment_intent.processing':
@@ -87,9 +87,9 @@ app.post('/webhooks/orcarail', (req, res) => {
 });
 
 // Event handlers
-function handlePaymentSucceeded(event: any) {
+function handlePaymentCompleted(event: any) {
   const paymentIntent = event.data.object;
-  console.log('Payment succeeded:', {
+  console.log('Payment completed:', {
     id: paymentIntent.id,
     amount: paymentIntent.amount,
     currency: paymentIntent.currency,

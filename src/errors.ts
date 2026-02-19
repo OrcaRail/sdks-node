@@ -28,12 +28,7 @@ export class OrcaRailAPIError extends OrcaRailError {
    */
   public readonly details?: unknown;
 
-  constructor(
-    message: string,
-    statusCode: number,
-    type?: string,
-    details?: unknown
-  ) {
+  constructor(message: string, statusCode: number, type?: string, details?: unknown) {
     super(message);
     this.name = 'OrcaRailAPIError';
     this.statusCode = statusCode;
@@ -61,10 +56,7 @@ export class OrcaRailSignatureVerificationError extends OrcaRailError {
    */
   public readonly signature: string;
 
-  constructor(
-    message: string = 'Webhook signature verification failed',
-    signature?: string
-  ) {
+  constructor(message: string = 'Webhook signature verification failed', signature?: string) {
     super(message);
     this.name = 'OrcaRailSignatureVerificationError';
     this.signature = signature || '';

@@ -96,9 +96,9 @@ async function getRawBody(req: NextApiRequest): Promise<Buffer> {
  */
 async function handleWebhookEvent(event: any): Promise<void> {
   switch (event.type) {
-    case 'payment_intent.succeeded':
+    case 'payment_intent.completed':
       const paymentIntent = event.data.object;
-      console.log('Payment succeeded:', {
+      console.log('Payment completed:', {
         id: paymentIntent.id,
         amount: paymentIntent.amount,
         currency: paymentIntent.currency,

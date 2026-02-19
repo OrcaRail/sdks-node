@@ -124,8 +124,8 @@ app.post('/webhooks/orcarail', express.raw({ type: 'application/json' }), (req, 
 
     // Handle the event
     switch (event.type) {
-      case 'payment_intent.succeeded':
-        console.log('Payment succeeded:', event.data.object.id);
+      case 'payment_intent.completed':
+        console.log('Payment completed:', event.data.object.id);
         // Fulfill order, send confirmation email, etc.
         break;
       case 'payment_intent.processing':

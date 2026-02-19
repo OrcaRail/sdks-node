@@ -1,8 +1,4 @@
-import {
-  OrcaRailAPIError,
-  OrcaRailAuthenticationError,
-  OrcaRailError,
-} from './errors';
+import { OrcaRailAPIError, OrcaRailAuthenticationError, OrcaRailError } from './errors';
 import type { OrcaRailConfig } from './types';
 
 const DEFAULT_BASE_URL = 'https://api.orcarail.com/api/v1';
@@ -33,9 +29,7 @@ export class HttpClient {
    * Create Basic Auth header from API key and secret
    */
   private getAuthHeader(): string {
-    const credentials = Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString(
-      'base64'
-    );
+    const credentials = Buffer.from(`${this.apiKey}:${this.apiSecret}`).toString('base64');
     return `Basic ${credentials}`;
   }
 
@@ -97,16 +91,12 @@ export class HttpClient {
       // Handle non-2xx responses
       if (!response.ok) {
         const errorMessage =
-          typeof responseData === 'object' &&
-          responseData !== null &&
-          'message' in responseData
+          typeof responseData === 'object' && responseData !== null && 'message' in responseData
             ? String((responseData as { message: unknown }).message)
             : `API request failed with status ${response.status}`;
 
         const errorType =
-          typeof responseData === 'object' &&
-          responseData !== null &&
-          'error' in responseData
+          typeof responseData === 'object' && responseData !== null && 'error' in responseData
             ? String((responseData as { error: unknown }).error)
             : undefined;
 
@@ -114,12 +104,7 @@ export class HttpClient {
           throw new OrcaRailAuthenticationError(errorMessage);
         }
 
-        throw new OrcaRailAPIError(
-          errorMessage,
-          response.status,
-          errorType,
-          responseData
-        );
+        throw new OrcaRailAPIError(errorMessage, response.status, errorType, responseData);
       }
 
       return responseData as T;
@@ -132,9 +117,7 @@ export class HttpClient {
 
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
-          throw new OrcaRailError(
-            `Request timeout after ${this.timeout}ms`
-          );
+          throw new OrcaRailError(`Request timeout after ${this.timeout}ms`);
         }
         throw new OrcaRailError(`Request failed: ${error.message}`);
       }
@@ -153,43 +136,28 @@ export class HttpClient {
   /**
    * POST request
    */
-  public async post<T>(
-    path: string,
-    body?: unknown,
-    requireAuth: boolean = true
-  ): Promise<T> {
+  public async post<T>(path: string, body?: unknown, requireAuth: boolean = true): Promise<T> {
     return this.request<T>('POST', path, body, requireAuth);
   }
 
   /**
    * PATCH request
    */
-  public async patch<T>(
-    path: string,
-    body?: unknown,
-    requireAuth: boolean = true
-  ): Promise<T> {
+  public async patch<T>(path: string, body?: unknown, requireAuth: boolean = true): Promise<T> {
     return this.request<T>('PATCH', path, body, requireAuth);
   }
 
   /**
    * PUT request
    */
-  public async put<T>(
-    path: string,
-    body?: unknown,
-    requireAuth: boolean = true
-  ): Promise<T> {
+  public async put<T>(path: string, body?: unknown, requireAuth: boolean = true): Promise<T> {
     return this.request<T>('PUT', path, body, requireAuth);
   }
 
   /**
    * DELETE request
    */
-  public async delete<T>(
-    path: string,
-    requireAuth: boolean = true
-  ): Promise<T> {
+  public async delete<T>(path: string, requireAuth: boolean = true): Promise<T> {
     return this.request<T>('DELETE', path, undefined, requireAuth);
   }
 }

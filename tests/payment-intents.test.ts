@@ -46,11 +46,7 @@ describe('PaymentIntents', () => {
 
       const result = await paymentIntents.create(params);
 
-      expect(mockClient.post).toHaveBeenCalledWith(
-        'payment_intents',
-        params,
-        true
-      );
+      expect(mockClient.post).toHaveBeenCalledWith('payment_intents', params, true);
       expect(result).toEqual(mockResponse);
     });
 
@@ -157,11 +153,7 @@ describe('PaymentIntents', () => {
 
       const result = await paymentIntents.confirm('pi_123', params);
 
-      expect(mockClient.post).toHaveBeenCalledWith(
-        'payment_intents/pi_123/confirm',
-        params,
-        false
-      );
+      expect(mockClient.post).toHaveBeenCalledWith('payment_intents/pi_123/confirm', params, false);
       expect(result).toEqual(mockResponse);
     });
   });
@@ -190,11 +182,7 @@ describe('PaymentIntents', () => {
 
       const result = await paymentIntents.update('pi_123', params);
 
-      expect(mockClient.patch).toHaveBeenCalledWith(
-        'payment_intents/pi_123',
-        params,
-        true
-      );
+      expect(mockClient.patch).toHaveBeenCalledWith('payment_intents/pi_123', params, true);
       expect(result).toEqual(mockResponse);
     });
   });

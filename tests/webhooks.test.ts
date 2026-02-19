@@ -16,9 +16,7 @@ describe('Webhooks', () => {
         created: 1234567890,
       });
 
-      const signature = createHmac('sha256', secret)
-        .update(payload)
-        .digest('hex');
+      const signature = createHmac('sha256', secret).update(payload).digest('hex');
 
       const isValid = webhooks.verifySignature(payload, signature, secret);
       expect(isValid).toBe(true);
@@ -33,11 +31,7 @@ describe('Webhooks', () => {
 
       const invalidSignature = 'invalid_signature';
 
-      const isValid = webhooks.verifySignature(
-        payload,
-        invalidSignature,
-        secret
-      );
+      const isValid = webhooks.verifySignature(payload, invalidSignature, secret);
       expect(isValid).toBe(false);
     });
 
@@ -48,9 +42,7 @@ describe('Webhooks', () => {
         created: 1234567890,
       });
 
-      const signature = createHmac('sha256', secret)
-        .update(payload)
-        .digest('hex');
+      const signature = createHmac('sha256', secret).update(payload).digest('hex');
 
       const tamperedPayload = JSON.stringify({
         type: 'payment_intent.succeeded',
@@ -58,11 +50,7 @@ describe('Webhooks', () => {
         created: 1234567890,
       });
 
-      const isValid = webhooks.verifySignature(
-        tamperedPayload,
-        signature,
-        secret
-      );
+      const isValid = webhooks.verifySignature(tamperedPayload, signature, secret);
       expect(isValid).toBe(false);
     });
 
@@ -73,9 +61,7 @@ describe('Webhooks', () => {
         created: 1234567890,
       });
 
-      const signature = createHmac('sha256', secret)
-        .update(payload)
-        .digest('hex');
+      const signature = createHmac('sha256', secret).update(payload).digest('hex');
 
       const buffer = Buffer.from(payload, 'utf8');
       const isValid = webhooks.verifySignature(buffer, signature, secret);
@@ -110,9 +96,7 @@ describe('Webhooks', () => {
       };
 
       const payload = JSON.stringify(event);
-      const signature = createHmac('sha256', secret)
-        .update(payload)
-        .digest('hex');
+      const signature = createHmac('sha256', secret).update(payload).digest('hex');
 
       const result = webhooks.constructEvent(payload, signature, secret);
       expect(result).toEqual(event);
@@ -134,9 +118,7 @@ describe('Webhooks', () => {
 
     it('should throw error for invalid JSON', () => {
       const invalidPayload = 'not valid json';
-      const signature = createHmac('sha256', secret)
-        .update(invalidPayload)
-        .digest('hex');
+      const signature = createHmac('sha256', secret).update(invalidPayload).digest('hex');
 
       expect(() => {
         webhooks.constructEvent(invalidPayload, signature, secret);
@@ -164,9 +146,7 @@ describe('Webhooks', () => {
 
       const payload = JSON.stringify(event);
       const buffer = Buffer.from(payload, 'utf8');
-      const signature = createHmac('sha256', secret)
-        .update(payload)
-        .digest('hex');
+      const signature = createHmac('sha256', secret).update(payload).digest('hex');
 
       const result = webhooks.constructEvent(buffer, signature, secret);
       expect(result).toEqual(event);
