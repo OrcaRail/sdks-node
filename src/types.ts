@@ -168,6 +168,18 @@ export interface PaymentLink {
 }
 
 /**
+ * Payment transaction status values returned by the API.
+ * Aligns with API PaymentStatusEnum.
+ */
+export type PaymentStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'canceled'
+  | 'expired'
+  | 'completed'
+  | 'withdrawn';
+
+/**
  * Latest transaction details
  */
 export interface LatestTransaction {
@@ -177,9 +189,9 @@ export interface LatestTransaction {
   id: string;
 
   /**
-   * Transaction status
+   * Transaction status (enum value from API)
    */
-  status: string;
+  status: PaymentStatus;
 
   /**
    * Transaction hash
@@ -222,9 +234,9 @@ export interface PaymentIntent {
   currency: string;
 
   /**
-   * Current status
+   * Current status (enum value from API)
    */
-  status: string;
+  status: PaymentIntentStatus;
 
   /**
    * Payment method types
@@ -286,6 +298,17 @@ export interface PaymentIntent {
    */
   updatedAt: string;
 }
+
+/**
+ * Payment Intent status values returned by the API.
+ * Aligns with API enum: requires_payment_method | requires_confirmation | processing | completed | canceled
+ */
+export type PaymentIntentStatus =
+  | 'requires_payment_method'
+  | 'requires_confirmation'
+  | 'processing'
+  | 'completed'
+  | 'canceled';
 
 /**
  * Webhook event types

@@ -8,6 +8,7 @@ import type { OrcaRailConfig } from './types';
 export type {
   OrcaRailConfig,
   PaymentIntent,
+  PaymentIntentStatus,
   PaymentIntentCreateParams,
   PaymentIntentUpdateParams,
   PaymentIntentConfirmParams,
