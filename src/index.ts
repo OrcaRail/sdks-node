@@ -1,6 +1,7 @@
 import { HttpClient } from './client';
 import { Checkout } from './resources/checkout';
 import { PaymentIntents } from './resources/payment-intents';
+import { Price } from './resources/price';
 import { Webhooks } from './webhooks';
 import type { OrcaRailConfig } from './types';
 
@@ -17,6 +18,9 @@ export type {
   WebhookEvent,
   WebhookEventType,
   WebhookEventData,
+  FiatQuoteParams,
+  FiatQuote,
+  Currency,
 } from './types';
 
 // Re-export all errors
@@ -59,6 +63,11 @@ export class OrcaRail {
   public readonly checkout: Checkout;
 
   /**
+   * Price resource (fiat quote, currencies)
+   */
+  public readonly price: Price;
+
+  /**
    * Webhooks utilities
    */
   public readonly webhooks: Webhooks;
@@ -76,6 +85,7 @@ export class OrcaRail {
     this.client = new HttpClient(apiKey, apiSecret, config);
     this.paymentIntents = new PaymentIntents(this.client);
     this.checkout = new Checkout(this.client);
+    this.price = new Price(this.client);
     this.webhooks = new Webhooks();
   }
 }

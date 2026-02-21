@@ -354,3 +354,57 @@ export interface WebhookEvent {
    */
   created: number;
 }
+
+/**
+ * Parameters for fiat-to-USDC quote
+ */
+export interface FiatQuoteParams {
+  /**
+   * Amount in source currency (e.g. "100000")
+   */
+  amount: string;
+
+  /**
+   * Source currency code (e.g. "irr", "usd")
+   */
+  currency: string;
+}
+
+/**
+ * Fiat-to-USDC quote response
+ */
+export interface FiatQuote {
+  /**
+   * Amount in USD
+   */
+  amountUsd: string;
+
+  /**
+   * Amount in USDC (same as USD for stablecoin)
+   */
+  amountUsdc: string;
+
+  /**
+   * Original amount in source currency
+   */
+  sourceAmount: string;
+
+  /**
+   * Source currency code
+   */
+  sourceCurrency: string;
+}
+
+/**
+ * Currency from the price API
+ */
+export interface Currency {
+  id: string;
+  code: string;
+  name: string;
+  symbol?: string | null;
+  decimals: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
