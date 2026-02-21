@@ -51,7 +51,11 @@ export class HttpClient {
     body?: unknown,
     requireAuth: boolean = true
   ): Promise<T> {
-    const url = this.buildUrl(path);
+    let url = this.buildUrl(path);
+    if (method === 'GET') {
+      const separator = url.includes('?') ? '&' : '?';
+      url = `${url}${separator}_=${Date.now()}`;
+    }
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       'User-Agent': `orcarail-node/${SDK_VERSION}`,
@@ -68,6 +72,11 @@ export class HttpClient {
 
     if (body) {
       options.body = JSON.stringify(body);
+    }
+
+    // Disable fetch cache so GET requests always hit the API (e.g. Next.js Data Cache)
+    if (method === 'GET') {
+      (options as RequestInit & { cache?: 'no-store' }).cache = 'no-store';
     }
 
     // Create AbortController for timeout
