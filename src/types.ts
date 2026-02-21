@@ -229,9 +229,14 @@ export interface PaymentIntent {
   amount: string;
 
   /**
-   * Currency code
+   * Currency code (from currency relation)
    */
   currency: string;
+
+  /**
+   * Currency entity ID (from currency relation)
+   */
+  currency_id?: string;
 
   /**
    * Current status (enum value from API)
