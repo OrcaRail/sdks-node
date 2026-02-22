@@ -12,7 +12,7 @@ describe('Webhooks', () => {
     it('should verify valid signature', () => {
       const payload = JSON.stringify({
         type: 'payment_intent.succeeded',
-        data: { object: { id: 'pi_123' } },
+        data: { object: { id: '123' } },
         created: 1234567890,
       });
 
@@ -25,7 +25,7 @@ describe('Webhooks', () => {
     it('should reject invalid signature', () => {
       const payload = JSON.stringify({
         type: 'payment_intent.succeeded',
-        data: { object: { id: 'pi_123' } },
+        data: { object: { id: '123' } },
         created: 1234567890,
       });
 
@@ -38,7 +38,7 @@ describe('Webhooks', () => {
     it('should reject tampered payload', () => {
       const payload = JSON.stringify({
         type: 'payment_intent.succeeded',
-        data: { object: { id: 'pi_123' } },
+        data: { object: { id: '123' } },
         created: 1234567890,
       });
 
@@ -46,7 +46,7 @@ describe('Webhooks', () => {
 
       const tamperedPayload = JSON.stringify({
         type: 'payment_intent.succeeded',
-        data: { object: { id: 'pi_456' } }, // Changed ID
+        data: { object: { id: '456' } }, // Changed ID
         created: 1234567890,
       });
 
@@ -57,7 +57,7 @@ describe('Webhooks', () => {
     it('should handle Buffer input', () => {
       const payload = JSON.stringify({
         type: 'payment_intent.succeeded',
-        data: { object: { id: 'pi_123' } },
+        data: { object: { id: '123' } },
         created: 1234567890,
       });
 
@@ -81,7 +81,7 @@ describe('Webhooks', () => {
         type: 'payment_intent.succeeded',
         data: {
           object: {
-            id: 'pi_123',
+            id: '123',
             object: 'payment_intent',
             amount: '100.00',
             currency: 'usd',
@@ -105,7 +105,7 @@ describe('Webhooks', () => {
     it('should throw error for invalid signature', () => {
       const payload = JSON.stringify({
         type: 'payment_intent.succeeded',
-        data: { object: { id: 'pi_123' } },
+        data: { object: { id: '123' } },
         created: 1234567890,
       });
 
@@ -130,7 +130,7 @@ describe('Webhooks', () => {
         type: 'payment_intent.succeeded',
         data: {
           object: {
-            id: 'pi_123',
+            id: '123',
             object: 'payment_intent',
             amount: '100.00',
             currency: 'usd',

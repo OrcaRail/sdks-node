@@ -38,7 +38,7 @@ describe('HttpClient', () => {
   describe('get', () => {
     it('should make GET request with Basic Auth', async () => {
       const client = new HttpClient('ak_test', 'sk_test');
-      const mockResponse = { id: 'pi_123' };
+      const mockResponse = { id: '123' };
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -104,7 +104,7 @@ describe('HttpClient', () => {
     it('should make POST request with body', async () => {
       const client = new HttpClient('ak_test', 'sk_test');
       const body = { amount: '100.00', currency: 'usd' };
-      const mockResponse = { id: 'pi_123', ...body };
+      const mockResponse = { id: '123', ...body };
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
@@ -133,13 +133,13 @@ describe('HttpClient', () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         headers: new Headers({ 'content-type': 'application/json' }),
-        json: async () => ({ id: 'pi_123', amount: '200.00' }),
+        json: async () => ({ id: '123', amount: '200.00' }),
       });
 
-      await client.patch('/payment_intents/pi_123', body);
+      await client.patch('/payment_intents/123', body);
 
       expect(mockFetch).toHaveBeenCalledWith(
-        expect.stringContaining('/payment_intents/pi_123'),
+        expect.stringContaining('/payment_intents/123'),
         expect.objectContaining({
           method: 'PATCH',
         })

@@ -77,17 +77,14 @@ const intent = await orcarail.paymentIntents.create({
 #### Retrieve a Payment Intent
 
 ```typescript
-const intent = await orcarail.paymentIntents.retrieve(
-  'pi_1234567890',
-  'pi_1234567890_secret_abc123'
-);
+const intent = await orcarail.paymentIntents.retrieve('1234567890');
 ```
 
 #### Confirm a Payment Intent
 
 ```typescript
-const intent = await orcarail.paymentIntents.confirm('pi_1234567890', {
-  client_secret: 'pi_1234567890_secret_abc123',
+const intent = await orcarail.paymentIntents.confirm('1234567890', {
+  client_secret: '1234567890_secret_abc123',
   return_url: 'https://merchant.example.com/return', // optional
 });
 ```
@@ -95,7 +92,7 @@ const intent = await orcarail.paymentIntents.confirm('pi_1234567890', {
 #### Update a Payment Intent
 
 ```typescript
-const intent = await orcarail.paymentIntents.update('pi_1234567890', {
+const intent = await orcarail.paymentIntents.update('1234567890', {
   amount: '200.00',
   description: 'Updated description',
   metadata: { order_id: '67890' },

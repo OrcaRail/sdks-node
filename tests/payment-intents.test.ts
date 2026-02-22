@@ -30,13 +30,13 @@ describe('PaymentIntents', () => {
       };
 
       const mockResponse: PaymentIntent = {
-        id: 'pi_123',
+        id: '123',
         object: 'payment_intent',
         amount: '100.00',
         currency: 'usd',
         status: 'requires_payment_method',
         payment_method_types: ['crypto'],
-        client_secret: 'pi_123_secret',
+        client_secret: '123_secret',
         return_url: 'https://example.com/return',
         createdAt: '2024-01-01T00:00:00.000Z',
         updatedAt: '2024-01-01T00:00:00.000Z',
@@ -60,7 +60,7 @@ describe('PaymentIntents', () => {
       };
 
       vi.mocked(mockClient.post).mockResolvedValueOnce({
-        id: 'pi_123',
+        id: '123',
         object: 'payment_intent',
         amount: '100.00',
         currency: 'usd',
@@ -86,7 +86,7 @@ describe('PaymentIntents', () => {
   describe('retrieve', () => {
     it('should retrieve a payment intent', async () => {
       const mockResponse: PaymentIntent = {
-        id: 'pi_123',
+        id: '123',
         object: 'payment_intent',
         amount: '100.00',
         currency: 'usd',
@@ -99,18 +99,18 @@ describe('PaymentIntents', () => {
 
       vi.mocked(mockClient.get).mockResolvedValueOnce(mockResponse);
 
-      const result = await paymentIntents.retrieve('pi_123');
+      const result = await paymentIntents.retrieve('123');
 
       expect(mockClient.get).toHaveBeenCalledWith(
-        expect.stringContaining('payment_intents/pi_123'),
+        expect.stringContaining('payment_intents/123'),
         true
       );
       expect(result).toEqual(mockResponse);
     });
 
-    it('should handle ID without pi_ prefix', async () => {
+    it('should pass id through to path unchanged', async () => {
       vi.mocked(mockClient.get).mockResolvedValueOnce({
-        id: 'pi_123',
+        id: '123',
         object: 'payment_intent',
         amount: '100.00',
         currency: 'usd',
@@ -124,7 +124,7 @@ describe('PaymentIntents', () => {
       await paymentIntents.retrieve('123');
 
       expect(mockClient.get).toHaveBeenCalledWith(
-        expect.stringContaining('payment_intents/pi_123'),
+        expect.stringContaining('payment_intents/123'),
         true
       );
     });
@@ -133,12 +133,12 @@ describe('PaymentIntents', () => {
   describe('confirm', () => {
     it('should confirm a payment intent', async () => {
       const params = {
-        client_secret: 'pi_123_secret',
+        client_secret: '123_secret',
         return_url: 'https://example.com/return',
       };
 
       const mockResponse: PaymentIntent = {
-        id: 'pi_123',
+        id: '123',
         object: 'payment_intent',
         amount: '100.00',
         currency: 'usd',
@@ -151,9 +151,9 @@ describe('PaymentIntents', () => {
 
       vi.mocked(mockClient.post).mockResolvedValueOnce(mockResponse);
 
-      const result = await paymentIntents.confirm('pi_123', params);
+      const result = await paymentIntents.confirm('123', params);
 
-      expect(mockClient.post).toHaveBeenCalledWith('payment_intents/pi_123/confirm', params, false);
+      expect(mockClient.post).toHaveBeenCalledWith('payment_intents/123/confirm', params, false);
       expect(result).toEqual(mockResponse);
     });
   });
@@ -166,7 +166,7 @@ describe('PaymentIntents', () => {
       };
 
       const mockResponse: PaymentIntent = {
-        id: 'pi_123',
+        id: '123',
         object: 'payment_intent',
         amount: '200.00',
         currency: 'usd',
@@ -180,9 +180,9 @@ describe('PaymentIntents', () => {
 
       vi.mocked(mockClient.patch).mockResolvedValueOnce(mockResponse);
 
-      const result = await paymentIntents.update('pi_123', params);
+      const result = await paymentIntents.update('123', params);
 
-      expect(mockClient.patch).toHaveBeenCalledWith('payment_intents/pi_123', params, true);
+      expect(mockClient.patch).toHaveBeenCalledWith('payment_intents/123', params, true);
       expect(result).toEqual(mockResponse);
     });
   });

@@ -214,7 +214,7 @@ export interface LatestTransaction {
  */
 export interface PaymentIntent {
   /**
-   * Payment Intent ID (e.g., "pi_1234567890")
+   * Payment Intent ID (raw, no prefix)
    */
   id: string;
 
