@@ -1,5 +1,5 @@
 import { HttpClient } from './client';
-import { Checkout } from './resources/checkout';
+import { Pay } from './resources/pay';
 import { PaymentIntents } from './resources/payment-intents';
 import { Price } from './resources/price';
 import { Webhooks } from './webhooks';
@@ -58,9 +58,9 @@ export class OrcaRail {
   public readonly paymentIntents: PaymentIntents;
 
   /**
-   * Checkout resource (slug-based get/cancel)
+   * Pay resource (slug-based get/cancel)
    */
-  public readonly checkout: Checkout;
+  public readonly pay: Pay;
 
   /**
    * Price resource (fiat quote, currencies)
@@ -84,7 +84,7 @@ export class OrcaRail {
   constructor(apiKey: string, apiSecret: string, config?: OrcaRailConfig) {
     this.client = new HttpClient(apiKey, apiSecret, config);
     this.paymentIntents = new PaymentIntents(this.client);
-    this.checkout = new Checkout(this.client);
+    this.pay = new Pay(this.client);
     this.price = new Price(this.client);
     this.webhooks = new Webhooks();
   }

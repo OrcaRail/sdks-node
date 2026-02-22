@@ -254,9 +254,9 @@ export interface PaymentIntent {
   client_secret?: string;
 
   /**
-   * Checkout URL (clean URL without secrets)
+   * Pay URL (clean URL without secrets)
    */
-  checkout_url?: string;
+  pay_url?: string;
 
   /**
    * Return URL

@@ -45,7 +45,7 @@ async function createPaymentIntent() {
       });
 
       console.log('\nPayment Intent confirmed!');
-      console.log('Redirect URL:', confirmed.hosted_checkout_url);
+      console.log('Redirect URL:', confirmed.pay_url);
     }
   } catch (error) {
     if (error instanceof Error) {

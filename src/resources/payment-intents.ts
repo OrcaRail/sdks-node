@@ -63,7 +63,7 @@ export class PaymentIntents {
 
   /**
    * Confirm a Payment Intent (API: POST /payment_intents/:id/confirm).
-   * Redirects the customer to the hosted checkout page.
+   * Redirects the customer to the hosted pay page.
    *
    * @param id - Payment Intent ID (raw, no prefix)
    * @param params - Confirmation parameters including client_secret and return_url
