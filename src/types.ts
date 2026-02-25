@@ -173,6 +173,7 @@ export interface PaymentLink {
  */
 export type PaymentStatus =
   | 'pending'
+  | 'partial_confirmed'
   | 'confirmed'
   | 'canceled'
   | 'expired'
