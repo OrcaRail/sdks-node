@@ -11,7 +11,7 @@ export class Webhooks {
    *
    * @param rawBody - Raw request body (string or Buffer)
    * @param signature - Signature from x-webhook-signature header
-   * @param secret - Webhook secret (API key's secretHash)
+   * @param secret - API key secret (sk_live_...) used to verify the HMAC signature
    * @returns True if signature is valid, false otherwise
    */
   public verifySignature(rawBody: string | Buffer, signature: string, secret: string): boolean {
@@ -42,7 +42,7 @@ export class Webhooks {
    *
    * @param rawBody - Raw request body (string or Buffer)
    * @param signature - Signature from x-webhook-signature header
-   * @param secret - Webhook secret (API key's secretHash)
+   * @param secret - API key secret (sk_live_...) used to verify the HMAC signature
    * @returns Parsed webhook event
    * @throws OrcaRailSignatureVerificationError if signature is invalid
    */

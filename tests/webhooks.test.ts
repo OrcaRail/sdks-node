@@ -9,9 +9,9 @@ describe('Webhooks', () => {
   const secret = 'test_secret_key';
 
   describe('verifySignature', () => {
-    it('should verify valid signature', () => {
+    it('should verify valid signature (API key secret = sk_live_...)', () => {
       const payload = JSON.stringify({
-        type: 'payment_intent.succeeded',
+        type: 'payment_intent.completed',
         data: { object: { id: '123' } },
         created: 1234567890,
       });
