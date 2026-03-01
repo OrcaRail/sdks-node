@@ -29,6 +29,7 @@ async function createPaymentIntent() {
         order_id: '12345',
         customer_id: '67890',
       },
+      // withdrawal_address: '0x...', // optional: override where funds are withdrawn; omit to use account default
     });
 
     console.log('Payment Intent created successfully!');

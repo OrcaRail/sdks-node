@@ -9,6 +9,7 @@ Official Node.js SDK for [OrcaRail](https://orcarail.com) - Accept crypto paymen
 ## Features
 
 - ✅ **Payment Intents** - Create, retrieve, confirm, and update payment intents
+- ✅ **Split and get your commission** - Set a commission % on API keys; it’s applied to quotes, shown to payers, and sent to your withdrawal address
 - ✅ **Webhook Verification** - Secure webhook signature verification
 - ✅ **TypeScript Support** - Full TypeScript definitions included
 - ✅ **Zero Dependencies** - Uses native Node.js APIs (Node 18+)
@@ -71,7 +72,10 @@ const intent = await orcarail.paymentIntents.create({
   description: 'Payment for services', // optional
   metadata: { order_id: '12345' }, // optional
   expires_at: '2024-12-31T23:59:59Z', // optional
+  withdrawal_address: '0x...', // optional: override where funds are withdrawn; omit to use account default
 });
+
+// API keys can have a commission % (dashboard or PATCH /api/v1/api-keys/:id). Payments created with that key include commission in the quote and send it to your withdrawal address.
 ```
 
 #### Retrieve a Payment Intent
@@ -96,6 +100,7 @@ const intent = await orcarail.paymentIntents.update('1234567890', {
   amount: '200.00',
   description: 'Updated description',
   metadata: { order_id: '67890' },
+  withdrawal_address: '0x...', // optional: override withdrawal address for this payment
 });
 ```
 

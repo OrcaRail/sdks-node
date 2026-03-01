@@ -75,6 +75,11 @@ export interface PaymentIntentCreateParams {
    * ISO 8601 expiration timestamp
    */
   expires_at?: string | null;
+
+  /**
+   * Override withdrawal address for this payment intent (when null, user's default is used)
+   */
+  withdrawal_address?: string | null;
 }
 
 /**
@@ -130,6 +135,11 @@ export interface PaymentIntentUpdateParams {
    * Updated expiration timestamp
    */
   expires_at?: string | null;
+
+  /**
+   * Override withdrawal address for this payment intent (when null, user's default is used)
+   */
+  withdrawal_address?: string | null;
 }
 
 /**
