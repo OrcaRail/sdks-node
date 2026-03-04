@@ -77,9 +77,9 @@ export interface PaymentIntentCreateParams {
   expires_at?: string | null;
 
   /**
-   * Override withdrawal address for this payment intent (when null, user's default is used)
+   * Withdrawal addresses by chain type (e.g. { evm: '0x...', solana: '...' }). When omitted, user's default from Withdrawal Settings is used.
    */
-  withdrawal_address?: string | null;
+  withdrawal_addresses?: Record<string, string>;
 }
 
 /**
@@ -137,9 +137,9 @@ export interface PaymentIntentUpdateParams {
   expires_at?: string | null;
 
   /**
-   * Override withdrawal address for this payment intent (when null, user's default is used)
+   * Withdrawal addresses by chain type (e.g. { evm: '0x...', solana: '...' }). When omitted, user's default from Withdrawal Settings is used.
    */
-  withdrawal_address?: string | null;
+  withdrawal_addresses?: Record<string, string>;
 }
 
 /**
