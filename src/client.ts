@@ -164,9 +164,9 @@ export class HttpClient {
   }
 
   /**
-   * DELETE request
+   * DELETE request (optional body for APIs that accept it, e.g. subscription cancel)
    */
-  public async delete<T>(path: string, requireAuth: boolean = true): Promise<T> {
-    return this.request<T>('DELETE', path, undefined, requireAuth);
+  public async delete<T>(path: string, body?: unknown, requireAuth: boolean = true): Promise<T> {
+    return this.request<T>('DELETE', path, body, requireAuth);
   }
 }

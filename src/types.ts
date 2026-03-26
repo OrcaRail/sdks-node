@@ -326,6 +326,144 @@ export type PaymentIntentStatus =
   | 'completed'
   | 'canceled';
 
+// --- Subscription types (Stripe-style) ---
+
+export type SubscriptionStatus =
+  | 'trialing'
+  | 'active'
+  | 'past_due'
+  | 'canceled'
+  | 'paused'
+  | 'completed';
+
+export type SubscriptionInterval = 'day' | 'week' | 'month' | 'year';
+
+export type SubscriptionCollectionMethod = 'send_payment_link' | 'auto_charge';
+
+export interface SubscriptionAutoCharge {
+  payer_wallet_address: string;
+  payer_network_id: string;
+  payer_token_id: string;
+  allowance_tx_hash: string | null;
+  approved_amount: string | null;
+  status: 'pending' | 'approved' | 'revoked' | 'failed';
+}
+
+export interface Subscription {
+  id: string;
+  object: 'subscription';
+  status: SubscriptionStatus;
+  collection_method: SubscriptionCollectionMethod;
+  description: string;
+  amount: string;
+  currency: string;
+  token: { id: string; symbol: string; name: string };
+  network: { id: string; name: string; chain_id: number };
+  interval: SubscriptionInterval;
+  interval_count: number;
+  total_cycles: number | null;
+  completed_cycles: number;
+  billing_cycle_anchor: number;
+  current_period_start: string;
+  current_period_end: string;
+  start_date: string;
+  ended_at: string | null;
+  cancel_at: string | null;
+  cancel_at_period_end: boolean;
+  canceled_at: string | null;
+  cancellation_details: {
+    comment: string | null;
+    feedback: string | null;
+    reason: string | null;
+  };
+  trial_start: string | null;
+  trial_end: string | null;
+  auto_charge: SubscriptionAutoCharge | null;
+  payer: { id: string; email: string } | null;
+  latest_payment_link: PaymentLink | null;
+  payment_links?: { object: 'list'; data: PaymentLink[]; has_more: boolean };
+  withdrawal_addresses: Record<string, string>;
+  metadata: Record<string, unknown> | null;
+  return_url: string | null;
+  cancel_url: string | null;
+  created: string;
+  updated: string;
+}
+
+export interface SubscriptionCreateParams {
+  description: string;
+  amount: string;
+  currency: string;
+  token_id: string;
+  network_id: string;
+  interval: SubscriptionInterval;
+  interval_count?: number;
+  collection_method?: SubscriptionCollectionMethod;
+  total_cycles?: number;
+  billing_cycle_anchor?: string;
+  cancel_at?: string;
+  cancel_at_period_end?: boolean;
+  days_until_due?: number;
+  trial_end?: string;
+  trial_period_days?: number;
+  payer_user_id?: string;
+  payer_email?: string;
+  withdrawal_addresses?: Record<string, string>;
+  metadata?: Record<string, unknown>;
+  return_url?: string;
+  cancel_url?: string;
+}
+
+export interface SubscriptionUpdateParams {
+  description?: string;
+  amount?: string;
+  currency?: string;
+  token_id?: string;
+  network_id?: string;
+  collection_method?: SubscriptionCollectionMethod;
+  cancel_at?: string | null;
+  cancel_at_period_end?: boolean;
+  days_until_due?: number;
+  trial_end?: string;
+  metadata?: Record<string, unknown>;
+  withdrawal_addresses?: Record<string, string>;
+  pause_collection?: { behavior: 'void' | 'keep_as_draft' } | null;
+  return_url?: string | null;
+  cancel_url?: string | null;
+}
+
+export interface SubscriptionCancelParams {
+  cancellation_details?: {
+    comment?: string;
+    feedback?: 'too_expensive' | 'missing_features' | 'switched_service' | 'unused' | 'other';
+  };
+}
+
+export interface SubscriptionListParams {
+  status?: SubscriptionStatus;
+  collection_method?: SubscriptionCollectionMethod;
+  current_period_start?: { gt?: string; gte?: string; lt?: string; lte?: string };
+  current_period_end?: { gt?: string; gte?: string; lt?: string; lte?: string };
+  created?: { gt?: string; gte?: string; lt?: string; lte?: string };
+  limit?: number;
+  starting_after?: string;
+  ending_before?: string;
+}
+
+export interface SubscriptionListResponse {
+  data: Subscription[];
+  has_more: boolean;
+}
+
+/**
+ * Parameters for listing payment links for a subscription (cursor pagination)
+ */
+export interface SubscriptionPaymentLinksListParams {
+  limit?: number;
+  starting_after?: string;
+  ending_before?: string;
+}
+
 /**
  * Webhook event types
  */
@@ -334,16 +472,27 @@ export type WebhookEventType =
   | 'payment_intent.processing'
   | 'payment_intent.canceled'
   | 'payment_intent.requires_payment_method'
-  | 'payment_intent.requires_confirmation';
+  | 'payment_intent.requires_confirmation'
+  | 'subscription.created'
+  | 'subscription.updated'
+  | 'subscription.canceled'
+  | 'subscription.paused'
+  | 'subscription.resumed'
+  | 'subscription.trial_will_end'
+  | 'subscription.payment_link.created'
+  | 'subscription.payment_link.paid'
+  | 'subscription.payment_link.payment_failed'
+  | 'subscription.past_due'
+  | 'subscription.completed';
 
 /**
  * Webhook event data object
  */
 export interface WebhookEventData {
   /**
-   * Payment Intent object
+   * Payment Intent or Subscription object (depends on event type)
    */
-  object: PaymentIntent;
+  object: PaymentIntent | Subscription;
 }
 
 /**
