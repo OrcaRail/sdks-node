@@ -2,6 +2,7 @@ import { HttpClient } from './client';
 import { Pay } from './resources/pay';
 import { PaymentIntents } from './resources/payment-intents';
 import { Price } from './resources/price';
+import { Subscriptions } from './resources/subscriptions';
 import { Webhooks } from './webhooks';
 import type { OrcaRailConfig } from './types';
 
@@ -21,6 +22,17 @@ export type {
   FiatQuoteParams,
   FiatQuote,
   Currency,
+  Subscription,
+  SubscriptionStatus,
+  SubscriptionInterval,
+  SubscriptionCollectionMethod,
+  SubscriptionAutoCharge,
+  SubscriptionCreateParams,
+  SubscriptionUpdateParams,
+  SubscriptionCancelParams,
+  SubscriptionListParams,
+  SubscriptionListResponse,
+  SubscriptionPaymentLinksListParams,
 } from './types';
 
 // Re-export all errors
@@ -58,6 +70,11 @@ export class OrcaRail {
   public readonly paymentIntents: PaymentIntents;
 
   /**
+   * Subscriptions resource (Stripe-style)
+   */
+  public readonly subscriptions: Subscriptions;
+
+  /**
    * Pay resource (slug-based get/cancel)
    */
   public readonly pay: Pay;
@@ -84,6 +101,7 @@ export class OrcaRail {
   constructor(apiKey: string, apiSecret: string, config?: OrcaRailConfig) {
     this.client = new HttpClient(apiKey, apiSecret, config);
     this.paymentIntents = new PaymentIntents(this.client);
+    this.subscriptions = new Subscriptions(this.client);
     this.pay = new Pay(this.client);
     this.price = new Price(this.client);
     this.webhooks = new Webhooks();
