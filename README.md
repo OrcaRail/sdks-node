@@ -162,6 +162,26 @@ if (isValid) {
 }
 ```
 
+### Subscriptions
+
+Subscription collection methods infer organization from the authenticated API key.
+
+```typescript
+const subscription = await orcarail.subscriptions.create({
+  description: 'Monthly Pro Plan',
+  amount: '10.00',
+  currency: 'usd',
+  token_id: 'token_uuid',
+  network_id: 'network_uuid',
+  interval: 'month',
+})
+
+const { data } = await orcarail.subscriptions.list({
+  status: 'active',
+  limit: 20,
+})
+```
+
 ## Configuration
 
 ```typescript
