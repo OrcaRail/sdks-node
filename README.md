@@ -164,7 +164,7 @@ if (isValid) {
 
 ### Subscriptions
 
-Subscription collection methods infer organization from the authenticated API key.
+Subscription API methods (create/list/etc.) infer the organization from the authenticated API key.
 
 ```typescript
 const subscription = await orcarail.subscriptions.create({
@@ -174,12 +174,12 @@ const subscription = await orcarail.subscriptions.create({
   token_id: 'token_uuid',
   network_id: 'network_uuid',
   interval: 'month',
-})
+});
 
 const { data } = await orcarail.subscriptions.list({
   status: 'active',
   limit: 20,
-})
+});
 ```
 
 ## Configuration
