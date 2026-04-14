@@ -2,6 +2,7 @@ import { HttpClient } from './client';
 import { Pay } from './resources/pay';
 import { PaymentIntents } from './resources/payment-intents';
 import { Price } from './resources/price';
+import { Catalog } from './resources/catalog';
 import { Subscriptions } from './resources/subscriptions';
 import { Webhooks } from './webhooks';
 import type { OrcaRailConfig } from './types';
@@ -33,6 +34,15 @@ export type {
   SubscriptionListParams,
   SubscriptionListResponse,
   SubscriptionPaymentLinksListParams,
+  CatalogProduct,
+  CatalogPrice,
+  CatalogProductCreateParams,
+  CatalogProductUpdateParams,
+  CatalogPriceCreateParams,
+  CatalogPriceUpdateParams,
+  CatalogPriceListParams,
+  CatalogPriceSummary,
+  CatalogProductSummary,
 } from './types';
 
 // Re-export all errors
@@ -85,6 +95,11 @@ export class OrcaRail {
   public readonly price: Price;
 
   /**
+   * Catalog (organization products and prices)
+   */
+  public readonly catalog: Catalog;
+
+  /**
    * Webhooks utilities
    */
   public readonly webhooks: Webhooks;
@@ -104,6 +119,7 @@ export class OrcaRail {
     this.subscriptions = new Subscriptions(this.client);
     this.pay = new Pay(this.client);
     this.price = new Price(this.client);
+    this.catalog = new Catalog(this.client);
     this.webhooks = new Webhooks();
   }
 }

@@ -26,14 +26,19 @@ export interface OrcaRailConfig {
  */
 export interface PaymentIntentCreateParams {
   /**
+   * Catalog price UUID. When provided, amount/currency/tokenId/networkId become optional.
+   */
+  price_id?: string;
+
+  /**
    * Amount to charge (e.g., "100.00")
    */
-  amount: string;
+  amount?: string;
 
   /**
    * Currency code (e.g., "usd")
    */
-  currency: string;
+  currency?: string;
 
   /**
    * Payment method types (must include "crypto")
@@ -44,12 +49,12 @@ export interface PaymentIntentCreateParams {
   /**
    * Token ID (UUID, e.g., USDC, USDT)
    */
-  tokenId: string;
+  tokenId?: string;
 
   /**
    * Network ID (UUID, e.g., Ethereum, Polygon)
    */
-  networkId: string;
+  networkId?: string;
 
   /**
    * Return URL after payment completion
@@ -86,6 +91,11 @@ export interface PaymentIntentCreateParams {
  * Parameters for updating a Payment Intent
  */
 export interface PaymentIntentUpdateParams {
+  /**
+   * Updated catalog price UUID
+   */
+  price_id?: string;
+
   /**
    * Updated amount
    */
@@ -259,6 +269,15 @@ export interface PaymentIntent {
    */
   payment_method_types: string[];
 
+  /** Catalog price UUID */
+  price_id?: string;
+
+  /** Expanded catalog price context */
+  price?: CatalogPriceSummary | null;
+
+  /** Expanded catalog product context */
+  product?: CatalogProductSummary | null;
+
   /**
    * Client secret used to confirm the payment intent from the frontend
    */
@@ -338,6 +357,111 @@ export type SubscriptionStatus =
 
 export type SubscriptionInterval = 'day' | 'week' | 'month' | 'year';
 
+/**
+ * Expanded catalog price on subscription / payment intent responses.
+ * API may use snake_case (e.g. interval_count, product_id) and nest `currency` as an object.
+ */
+export interface CatalogPriceSummary {
+  id: string;
+  amount: string;
+  currency?: string | { id: string; code: string; name?: string | null; symbol?: string | null } | null;
+  nickname?: string | null;
+  active?: boolean;
+  interval?: SubscriptionInterval | null;
+  interval_count?: number | null;
+  product_id?: string;
+  currency_id?: string;
+  token_id?: string;
+  network_id?: string;
+  metadata?: Record<string, unknown> | null;
+  token?: { id: string; symbol: string; name: string } | null;
+  network?: { id: string; name: string; chain_id?: number | null } | null;
+}
+
+export interface CatalogProductSummary {
+  id: string;
+  name: string;
+  description?: string | null;
+  active?: boolean;
+}
+
+export interface CatalogProduct {
+  id: string;
+  organizationId: string;
+  name: string;
+  description?: string | null;
+  active: boolean;
+  metadata?: Record<string, unknown> | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+}
+
+export interface CatalogPrice {
+  id: string;
+  organizationId: string;
+  productId: string;
+  product?: CatalogProductSummary | null;
+  nickname?: string | null;
+  amount: string;
+  currencyId: string;
+  currency?: { id: string; code: string };
+  tokenId: string;
+  networkId: string;
+  interval?: SubscriptionInterval | null;
+  intervalCount?: number | null;
+  active: boolean;
+  metadata?: Record<string, unknown> | null;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+}
+
+export interface CatalogProductCreateParams {
+  name: string;
+  description?: string;
+  active?: boolean;
+  metadata?: Record<string, unknown>;
+}
+
+export interface CatalogProductUpdateParams {
+  name?: string;
+  description?: string | null;
+  active?: boolean;
+  metadata?: Record<string, unknown> | null;
+}
+
+export interface CatalogPriceCreateParams {
+  product_id: string;
+  nickname?: string;
+  amount: string;
+  currency: string;
+  token_id: string;
+  network_id: string;
+  interval?: SubscriptionInterval | null;
+  interval_count?: number;
+  active?: boolean;
+  metadata?: Record<string, unknown>;
+}
+
+export interface CatalogPriceUpdateParams {
+  product_id?: string;
+  nickname?: string | null;
+  amount?: string;
+  currency?: string;
+  token_id?: string;
+  network_id?: string;
+  interval?: SubscriptionInterval | null;
+  interval_count?: number | null;
+  active?: boolean;
+  metadata?: Record<string, unknown> | null;
+}
+
+export interface CatalogPriceListParams {
+  active?: boolean;
+  recurring?: boolean;
+}
+
 export type SubscriptionCollectionMethod = 'send_payment_link' | 'auto_charge';
 
 export interface SubscriptionAutoCharge {
@@ -359,6 +483,9 @@ export interface Subscription {
   currency: string;
   token: { id: string; symbol: string; name: string };
   network: { id: string; name: string; chain_id: number };
+  price_id?: string | null;
+  price?: CatalogPriceSummary | null;
+  product?: CatalogProductSummary | null;
   interval: SubscriptionInterval;
   interval_count: number;
   total_cycles: number | null;
@@ -392,10 +519,11 @@ export interface Subscription {
 
 export interface SubscriptionCreateParams {
   description: string;
-  amount: string;
-  currency: string;
-  token_id: string;
-  network_id: string;
+  price_id?: string;
+  amount?: string;
+  currency?: string;
+  token_id?: string;
+  network_id?: string;
   interval: SubscriptionInterval;
   interval_count?: number;
   collection_method?: SubscriptionCollectionMethod;
@@ -415,6 +543,7 @@ export interface SubscriptionCreateParams {
 }
 
 export interface SubscriptionUpdateParams {
+  price_id?: string;
   description?: string;
   amount?: string;
   currency?: string;
