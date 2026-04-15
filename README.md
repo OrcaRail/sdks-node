@@ -162,6 +162,54 @@ if (isValid) {
 }
 ```
 
+### Catalog (API key)
+
+Catalog endpoints use the same **API key + secret** (Basic auth) as payment intents and subscriptions. List products and prices for your organization UUID, then reference a price by id.
+
+#### Subscription checkout with a catalog price
+
+```typescript
+const orgId = process.env.ORCARAIL_ORGANIZATION_ID!;
+
+const recurring = await orcarail.catalog.listActiveRecurringPrices(orgId);
+const go = recurring.find((p) => p.product?.name === 'Go');
+if (!go) throw new Error('Go plan not found');
+
+const subscription = await orcarail.subscriptions.create({
+  description: 'Go',
+  price_id: go.id,
+  interval: 'month', // required on DTO; billing still comes from the catalog price
+  interval_count: 1,
+  collection_method: 'send_payment_link',
+});
+```
+
+#### One-time payment with `price_id` (find or create)
+
+```typescript
+import OrcaRail from '@orcarail/node';
+
+const orgId = process.env.ORCARAIL_ORGANIZATION_ID!;
+const price = await orcarail.catalog.ensureOneTimePrice(orgId, {
+  amount: '42.00',
+  currencyCode: 'usd',
+  tokenId: 'token_uuid',
+  networkId: 'network_uuid',
+  productName: 'Demo pay-as-you-go',
+  productDescription: 'Variable one-time amounts',
+});
+
+const intent = await orcarail.paymentIntents.create({
+  price_id: price.id,
+  payment_method_types: ['crypto'],
+  tokenId: 'token_uuid',
+  networkId: 'network_uuid',
+  return_url: 'https://merchant.example.com/return',
+});
+```
+
+Optional product metadata for tier UIs is typed as `OrcaRailCatalogPlanProductMetadata`; use `parseCatalogPlanMetadata(product.metadata)` when reading `metadata` from the API.
+
 ### Subscriptions
 
 Subscription API methods (create/list/etc.) infer the organization from the authenticated API key.
@@ -175,6 +223,15 @@ const subscription = await orcarail.subscriptions.create({
   network_id: 'network_uuid',
   interval: 'month',
 });
+
+// Or pass a recurring catalog `price_id` (amount/token/network come from the price):
+// await orcarail.subscriptions.create({
+//   description: 'Go',
+//   price_id: 'catalog_price_uuid',
+//   interval: 'month',
+//   interval_count: 1,
+//   collection_method: 'send_payment_link',
+// });
 
 const { data } = await orcarail.subscriptions.list({
   status: 'active',
