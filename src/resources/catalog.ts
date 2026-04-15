@@ -9,6 +9,18 @@ import type {
   CatalogProductUpdateParams,
 } from '../types';
 
+function normalizeMoneyAmount(raw: string): string {
+  const n = parseFloat(raw);
+  if (Number.isNaN(n) || n <= 0) {
+    throw new Error('Amount must be a positive number');
+  }
+  return n.toFixed(2);
+}
+
+function amountsEqual(a: string, b: string): boolean {
+  return Math.abs(parseFloat(a) - parseFloat(b)) < 0.000001;
+}
+
 function buildPriceListQuery(params?: CatalogPriceListParams): string {
   if (!params) return '';
   const search = new URLSearchParams();
@@ -105,5 +117,81 @@ export class Catalog {
       undefined,
       true
     );
+  }
+
+  /** Active recurring catalog prices (subscriptions). */
+  public async listActiveRecurringPrices(organizationId: string): Promise<CatalogPrice[]> {
+    return this.listPrices(organizationId, { active: true, recurring: true });
+  }
+
+  /**
+   * Find an active one-time catalog price by fiat amount, currency, and parent product name.
+   */
+  public async findOneTimePriceByAmount(
+    organizationId: string,
+    params: { amount: string; currencyCode: string; productName: string }
+  ): Promise<CatalogPrice | null> {
+    const amountStr = normalizeMoneyAmount(params.amount);
+    const currencyLower = params.currencyCode.trim().toLowerCase();
+    const oneTime = await this.listPrices(organizationId, {
+      recurring: false,
+      active: true,
+    });
+    const hit = oneTime.find((p) => {
+      if (p.interval != null) return false;
+      if (p.product?.name !== params.productName) return false;
+      const code = p.currency?.code?.toLowerCase() ?? 'usd';
+      return code === currencyLower && amountsEqual(p.amount, amountStr);
+    });
+    return hit ?? null;
+  }
+
+  /**
+   * Return an existing one-time price or create product + price. Useful for amount-based checkout.
+   */
+  public async ensureOneTimePrice(
+    organizationId: string,
+    params: {
+      amount: string;
+      currencyCode: string;
+      tokenId: string;
+      networkId: string;
+      productName: string;
+      productDescription?: string;
+      productMetadata?: Record<string, unknown>;
+    }
+  ): Promise<CatalogPrice> {
+    const existing = await this.findOneTimePriceByAmount(organizationId, {
+      amount: params.amount,
+      currencyCode: params.currencyCode,
+      productName: params.productName,
+    });
+    if (existing) return existing;
+
+    const amountStr = normalizeMoneyAmount(params.amount);
+    const currencyLower = params.currencyCode.trim().toLowerCase();
+    const products = await this.listProducts(organizationId);
+    let product = products.find((x) => x.name === params.productName);
+    if (!product) {
+      product = await this.createProduct(organizationId, {
+        name: params.productName,
+        description: params.productDescription ?? '',
+        active: true,
+        metadata: params.productMetadata ?? {},
+      });
+    }
+
+    const nickname = `demo-pay-onetime-${amountStr}`;
+    return this.createPrice(organizationId, {
+      product_id: product.id,
+      nickname,
+      amount: amountStr,
+      currency: currencyLower,
+      token_id: params.tokenId,
+      network_id: params.networkId,
+      interval: null,
+      active: true,
+      metadata: { seedKey: nickname },
+    });
   }
 }

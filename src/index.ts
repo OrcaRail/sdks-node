@@ -45,6 +45,11 @@ export type {
   CatalogProductSummary,
 } from './types';
 
+export {
+  parseCatalogPlanMetadata,
+  type OrcaRailCatalogPlanProductMetadata,
+} from './catalog-plan-metadata';
+
 // Re-export all errors
 export {
   OrcaRailError,

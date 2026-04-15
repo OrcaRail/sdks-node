@@ -364,7 +364,10 @@ export type SubscriptionInterval = 'day' | 'week' | 'month' | 'year';
 export interface CatalogPriceSummary {
   id: string;
   amount: string;
-  currency?: string | { id: string; code: string; name?: string | null; symbol?: string | null } | null;
+  currency?:
+    | string
+    | { id: string; code: string; name?: string | null; symbol?: string | null }
+    | null;
   nickname?: string | null;
   active?: boolean;
   interval?: SubscriptionInterval | null;
@@ -383,6 +386,8 @@ export interface CatalogProductSummary {
   name: string;
   description?: string | null;
   active?: boolean;
+  /** Present when API embeds full product metadata on nested relations. */
+  metadata?: Record<string, unknown> | null;
 }
 
 export interface CatalogProduct {
