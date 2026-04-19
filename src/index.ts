@@ -1,8 +1,9 @@
 import { HttpClient } from './client';
 import { Pay } from './resources/pay';
 import { PaymentIntents } from './resources/payment-intents';
-import { Price } from './resources/price';
-import { Catalog } from './resources/catalog';
+import { Rates } from './resources/rates';
+import { Products } from './resources/products';
+import { Prices } from './resources/prices';
 import { Subscriptions } from './resources/subscriptions';
 import { Webhooks } from './webhooks';
 import type { OrcaRailConfig } from './types';
@@ -34,8 +35,18 @@ export type {
   SubscriptionListParams,
   SubscriptionListResponse,
   SubscriptionPaymentLinksListParams,
+  CatalogListEnvelope,
   CatalogProduct,
   CatalogPrice,
+  CatalogPriceRecurring,
+  ProductSummary,
+  ExpandedPriceSummary,
+  ProductCreateParams,
+  ProductUpdateParams,
+  PriceCreateParams,
+  PriceUpdateParams,
+  PriceListParams,
+  ProductDataInlineParams,
   CatalogProductCreateParams,
   CatalogProductUpdateParams,
   CatalogPriceCreateParams,
@@ -85,7 +96,7 @@ export class OrcaRail {
   public readonly paymentIntents: PaymentIntents;
 
   /**
-   * Subscriptions resource (Stripe-style)
+   * Subscriptions resource
    */
   public readonly subscriptions: Subscriptions;
 
@@ -95,14 +106,19 @@ export class OrcaRail {
   public readonly pay: Pay;
 
   /**
-   * Price resource (fiat quote, currencies)
+   * Exchange rates / fiat quote resource
    */
-  public readonly price: Price;
+  public readonly rates: Rates;
 
   /**
-   * Catalog (organization products and prices)
+   * Catalog products
    */
-  public readonly catalog: Catalog;
+  public readonly products: Products;
+
+  /**
+   * Catalog prices
+   */
+  public readonly prices: Prices;
 
   /**
    * Webhooks utilities
@@ -123,8 +139,9 @@ export class OrcaRail {
     this.paymentIntents = new PaymentIntents(this.client);
     this.subscriptions = new Subscriptions(this.client);
     this.pay = new Pay(this.client);
-    this.price = new Price(this.client);
-    this.catalog = new Catalog(this.client);
+    this.rates = new Rates(this.client);
+    this.products = new Products(this.client);
+    this.prices = new Prices(this.client);
     this.webhooks = new Webhooks();
   }
 }

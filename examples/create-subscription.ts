@@ -2,7 +2,7 @@
  * Example: Create a Subscription
  *
  * This example demonstrates how to create a subscription using the OrcaRail SDK
- * (Stripe-style recurring payments with send_payment_link or auto_charge).
+ * Recurring payments with send_payment_link or auto_charge.
  */
 
 import OrcaRail from '../src/index';

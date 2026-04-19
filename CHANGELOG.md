@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking:** Renamed catalog-related public types: `StripeListEnvelope` → `CatalogListEnvelope`, `StripeProduct` → `CatalogProduct`, `StripePrice` → `CatalogPrice`, `StripePriceRecurring` → `CatalogPriceRecurring`. The previous `Stripe*` names are removed.
+
 ## [1.0.0] - 2024-01-01
 
 ### Added

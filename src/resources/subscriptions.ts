@@ -11,7 +11,7 @@ import type {
 } from '../types';
 
 /**
- * Build query string from list params (Stripe-style cursor pagination and filters)
+ * Build query string from list params (cursor pagination and filters)
  */
 function buildListQuery(params?: SubscriptionListParams): string {
   if (!params) return '';
@@ -60,7 +60,7 @@ function buildPaymentLinksQuery(params?: SubscriptionPaymentLinksListParams): st
 }
 
 /**
- * Subscriptions resource (Stripe-style API)
+ * Subscriptions resource
  */
 export class Subscriptions {
   private readonly client: HttpClient;
@@ -72,7 +72,7 @@ export class Subscriptions {
   /**
    * Create a subscription
    *
-   * @param params - Subscription creation parameters (Stripe-style snake_case)
+   * @param params - Subscription creation parameters (snake_case)
    * @returns The created subscription
    */
   public async create(params: SubscriptionCreateParams): Promise<Subscription> {

@@ -345,7 +345,7 @@ export type PaymentIntentStatus =
   | 'completed'
   | 'canceled';
 
-// --- Subscription types (Stripe-style) ---
+// --- Subscription types ---
 
 export type SubscriptionStatus =
   | 'trialing'
@@ -357,21 +357,33 @@ export type SubscriptionStatus =
 
 export type SubscriptionInterval = 'day' | 'week' | 'month' | 'year';
 
+export interface CatalogListEnvelope<T> {
+  object: 'list';
+  url: string;
+  has_more: boolean;
+  data: T[];
+}
+
 /**
- * Expanded catalog price on subscription / payment intent responses.
- * API may use snake_case (e.g. interval_count, product_id) and nest `currency` as an object.
+ * Expanded price on subscription / payment intent API responses.
  */
-export interface CatalogPriceSummary {
+export interface ExpandedPriceSummary {
+  object?: 'price';
   id: string;
-  amount: string;
+  unit_amount_decimal: string;
   currency?:
     | string
     | { id: string; code: string; name?: string | null; symbol?: string | null }
     | null;
   nickname?: string | null;
   active?: boolean;
-  interval?: SubscriptionInterval | null;
-  interval_count?: number | null;
+  recurring?: {
+    interval: SubscriptionInterval;
+    interval_count: number;
+    trial_period_days?: number | null;
+    usage_type?: string;
+  } | null;
+  type?: 'one_time' | 'recurring';
   product_id?: string;
   currency_id?: string;
   token_id?: string;
@@ -379,93 +391,169 @@ export interface CatalogPriceSummary {
   metadata?: Record<string, unknown> | null;
   token?: { id: string; symbol: string; name: string } | null;
   network?: { id: string; name: string; chain_id?: number | null } | null;
+  /** @deprecated Prefer unit_amount_decimal */
+  amount?: string;
+  interval?: SubscriptionInterval | null;
+  interval_count?: number | null;
 }
 
-export interface CatalogProductSummary {
+/** @deprecated Use ExpandedPriceSummary */
+export type CatalogPriceSummary = ExpandedPriceSummary;
+
+export interface ProductSummary {
   id: string;
   name: string;
   description?: string | null;
   active?: boolean;
-  /** Present when API embeds full product metadata on nested relations. */
+  /** Present on public catalog price rows when product images are resolved. */
+  images?: string[];
   metadata?: Record<string, unknown> | null;
 }
 
+/** @deprecated Use ProductSummary */
+export type CatalogProductSummary = ProductSummary;
+
 export interface CatalogProduct {
+  object: 'product';
   id: string;
-  organizationId: string;
-  name: string;
-  description?: string | null;
   active: boolean;
-  metadata?: Record<string, unknown> | null;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt?: string | null;
+  created: number;
+  default_price: string | null;
+  description?: string | null;
+  images: string[];
+  image_file_ids?: string[];
+  marketing_features: { name: string }[];
+  livemode: boolean;
+  metadata: Record<string, unknown>;
+  name: string;
+  shippable: boolean | null;
+  statement_descriptor: string | null;
+  unit_label: string | null;
+  updated: number;
+  url: string | null;
+}
+
+export interface CatalogPriceRecurring {
+  interval: SubscriptionInterval;
+  interval_count: number;
+  trial_period_days: number | null;
+  usage_type: string;
 }
 
 export interface CatalogPrice {
+  object: 'price';
   id: string;
-  organizationId: string;
-  productId: string;
-  product?: CatalogProductSummary | null;
-  nickname?: string | null;
-  amount: string;
-  currencyId: string;
-  currency?: { id: string; code: string };
-  tokenId: string;
-  networkId: string;
-  interval?: SubscriptionInterval | null;
-  intervalCount?: number | null;
   active: boolean;
-  metadata?: Record<string, unknown> | null;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt?: string | null;
+  billing_scheme: string;
+  created: number;
+  currency: string | null;
+  livemode: boolean;
+  lookup_key: string | null;
+  metadata: Record<string, unknown>;
+  nickname: string | null;
+  product: string | ProductSummary;
+  recurring: CatalogPriceRecurring | null;
+  type: 'one_time' | 'recurring';
+  unit_amount_decimal: string;
+  token?: { id: string; symbol: string; name: string } | null;
+  network?: { id: string; name: string; chain_id?: number | null } | null;
 }
 
-export interface CatalogProductCreateParams {
+export interface ProductCreateParams {
   name: string;
-  description?: string;
+  description?: string | null;
   active?: boolean;
   metadata?: Record<string, unknown>;
+  default_price?: string;
+  image_file_ids?: string[];
+  marketing_features?: { name: string }[];
+  statement_descriptor?: string | null;
+  unit_label?: string | null;
+  shippable?: boolean | null;
+  url?: string | null;
+  livemode?: boolean;
 }
 
-export interface CatalogProductUpdateParams {
+/** @deprecated Use ProductCreateParams */
+export type CatalogProductCreateParams = ProductCreateParams;
+
+export interface ProductUpdateParams {
   name?: string;
   description?: string | null;
   active?: boolean;
   metadata?: Record<string, unknown> | null;
+  default_price?: string | null;
+  image_file_ids?: string[] | null;
+  marketing_features?: { name: string }[] | null;
+  statement_descriptor?: string | null;
+  unit_label?: string | null;
+  shippable?: boolean | null;
+  url?: string | null;
+  livemode?: boolean;
 }
 
-export interface CatalogPriceCreateParams {
-  product_id: string;
-  nickname?: string;
-  amount: string;
+/** @deprecated Use ProductUpdateParams */
+export type CatalogProductUpdateParams = ProductUpdateParams;
+
+export interface ProductDataInlineParams {
+  name: string;
+  active?: boolean;
+  metadata?: Record<string, unknown>;
+  statement_descriptor?: string | null;
+  unit_label?: string | null;
+}
+
+export interface PriceCreateParams {
+  product?: string;
+  product_data?: ProductDataInlineParams;
+  unit_amount_decimal: string;
   currency: string;
   token_id: string;
   network_id: string;
-  interval?: SubscriptionInterval | null;
-  interval_count?: number;
+  recurring?: {
+    interval: SubscriptionInterval;
+    interval_count?: number;
+    trial_period_days?: number;
+  } | null;
+  lookup_key?: string;
+  transfer_lookup_key?: boolean;
+  nickname?: string | null;
   active?: boolean;
   metadata?: Record<string, unknown>;
 }
 
-export interface CatalogPriceUpdateParams {
-  product_id?: string;
+/** @deprecated Use PriceCreateParams */
+export type CatalogPriceCreateParams = PriceCreateParams;
+
+export interface PriceUpdateParams {
+  product?: string;
   nickname?: string | null;
-  amount?: string;
+  unit_amount_decimal?: string;
   currency?: string;
   token_id?: string;
   network_id?: string;
-  interval?: SubscriptionInterval | null;
-  interval_count?: number | null;
+  recurring?: {
+    interval?: SubscriptionInterval | null;
+    interval_count?: number | null;
+    trial_period_days?: number | null;
+  } | null;
+  lookup_key?: string | null;
+  transfer_lookup_key?: boolean;
   active?: boolean;
   metadata?: Record<string, unknown> | null;
 }
 
-export interface CatalogPriceListParams {
+/** @deprecated Use PriceUpdateParams */
+export type CatalogPriceUpdateParams = PriceUpdateParams;
+
+export interface PriceListParams {
   active?: boolean;
   recurring?: boolean;
+  limit?: number;
 }
+
+/** @deprecated Use PriceListParams */
+export type CatalogPriceListParams = PriceListParams;
 
 export type SubscriptionCollectionMethod = 'send_payment_link' | 'auto_charge';
 

@@ -162,17 +162,17 @@ if (isValid) {
 }
 ```
 
-### Catalog (API key)
+### Products & prices (API key)
 
-Catalog endpoints use the same **API key + secret** (Basic auth) as payment intents and subscriptions. List products and prices for your organization UUID, then reference a price by id.
+Product and price endpoints use the same **API key + secret** (Basic auth) as payment intents and subscriptions. List products and prices for your organization UUID, then reference a price by id.
 
-#### Subscription checkout with a catalog price
+#### Subscription checkout with a price id
 
 ```typescript
 const orgId = process.env.ORCARAIL_ORGANIZATION_ID!;
 
-const recurring = await orcarail.catalog.listActiveRecurringPrices(orgId);
-const go = recurring.find((p) => p.product?.name === 'Go');
+const recurring = await orcarail.prices.listActiveRecurring(orgId);
+const go = recurring.find((p) => typeof p.product === 'object' && p.product?.name === 'Go');
 if (!go) throw new Error('Go plan not found');
 
 const subscription = await orcarail.subscriptions.create({
@@ -190,7 +190,7 @@ const subscription = await orcarail.subscriptions.create({
 import OrcaRail from '@orcarail/node';
 
 const orgId = process.env.ORCARAIL_ORGANIZATION_ID!;
-const price = await orcarail.catalog.ensureOneTimePrice(orgId, {
+const price = await orcarail.prices.ensureOneTime(orgId, {
   amount: '42.00',
   currencyCode: 'usd',
   tokenId: 'token_uuid',
