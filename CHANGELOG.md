@@ -5,11 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [4.0.0] - 2026-04-25
+
+### Added
+
+- New catalog resources: `Products` and `Prices`.
+- New `Rates` resource for fiat quotes and currency listing.
+- Added `catalog-plan-metadata` helpers for parsing plan metadata.
+- Support for `price_id` in `PaymentIntentCreateParams` and `SubscriptionCreateParams`.
+- Refactored `PaymentIntentCreateParams` and `SubscriptionCreateParams` into discriminated unions for better type safety.
 
 ### Changed
 
 - **Breaking:** Renamed catalog-related public types: `StripeListEnvelope` → `CatalogListEnvelope`, `StripeProduct` → `CatalogProduct`, `StripePrice` → `CatalogPrice`, `StripePriceRecurring` → `CatalogPriceRecurring`. The previous `Stripe*` names are removed.
+- **Breaking:** Updated `PaymentIntentCreateParams` and `SubscriptionCreateParams` to require either `price_id` or full payment/subscription details.
 
 ## [1.0.0] - 2024-01-01
 
@@ -24,5 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive test suite
 - Example code for Express and Next.js
 
-[Unreleased]: https://github.com/orcarail/orcarail-node/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/orcarail/orcarail-node/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/orcarail/orcarail-node/releases/tag/v4.0.0
 [1.0.0]: https://github.com/orcarail/orcarail-node/releases/tag/v1.0.0

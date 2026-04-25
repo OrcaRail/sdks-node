@@ -22,39 +22,14 @@ export interface OrcaRailConfig {
 }
 
 /**
- * Parameters for creating a Payment Intent
+ * Base parameters for creating a Payment Intent
  */
-export interface PaymentIntentCreateParams {
-  /**
-   * Catalog price UUID. When provided, amount/currency/tokenId/networkId become optional.
-   */
-  price_id?: string;
-
-  /**
-   * Amount to charge (e.g., "100.00")
-   */
-  amount?: string;
-
-  /**
-   * Currency code (e.g., "usd")
-   */
-  currency?: string;
-
+export interface PaymentIntentBaseParams {
   /**
    * Payment method types (must include "crypto")
    * @default ["crypto"]
    */
   payment_method_types?: string[];
-
-  /**
-   * Token ID (UUID, e.g., USDC, USDT)
-   */
-  tokenId?: string;
-
-  /**
-   * Network ID (UUID, e.g., Ethereum, Polygon)
-   */
-  networkId?: string;
 
   /**
    * Return URL after payment completion
@@ -86,6 +61,31 @@ export interface PaymentIntentCreateParams {
    */
   withdrawal_addresses?: Record<string, string>;
 }
+
+/**
+ * Parameters for creating a Payment Intent.
+ * Must provide either a `price_id` or the full amount/currency/token/network details.
+ */
+export type PaymentIntentCreateParams =
+  | (PaymentIntentBaseParams & {
+      /** Catalog price UUID. */
+      price_id: string;
+      amount?: string;
+      currency?: string;
+      tokenId?: string;
+      networkId?: string;
+    })
+  | (PaymentIntentBaseParams & {
+      price_id?: never;
+      /** Amount to charge (e.g., "100.00") */
+      amount: string;
+      /** Currency code (e.g., "usd") */
+      currency: string;
+      /** Token ID (UUID, e.g., USDC, USDT) */
+      tokenId: string;
+      /** Network ID (UUID, e.g., Ethereum, Polygon) */
+      networkId: string;
+    });
 
 /**
  * Parameters for updating a Payment Intent
@@ -610,15 +610,8 @@ export interface Subscription {
   updated: string;
 }
 
-export interface SubscriptionCreateParams {
+export interface SubscriptionBaseParams {
   description: string;
-  price_id?: string;
-  amount?: string;
-  currency?: string;
-  token_id?: string;
-  network_id?: string;
-  interval: SubscriptionInterval;
-  interval_count?: number;
   collection_method?: SubscriptionCollectionMethod;
   total_cycles?: number;
   billing_cycle_anchor?: string;
@@ -634,6 +627,36 @@ export interface SubscriptionCreateParams {
   return_url?: string;
   cancel_url?: string;
 }
+
+/**
+ * Parameters for creating a Subscription.
+ * Must provide either a `price_id` or the full amount/currency/token/network/interval details.
+ */
+export type SubscriptionCreateParams =
+  | (SubscriptionBaseParams & {
+      /** Catalog price UUID. */
+      price_id: string;
+      interval?: SubscriptionInterval;
+      interval_count?: number;
+      amount?: string;
+      currency?: string;
+      token_id?: string;
+      network_id?: string;
+    })
+  | (SubscriptionBaseParams & {
+      price_id?: never;
+      /** Subscription interval */
+      interval: SubscriptionInterval;
+      /** Amount to charge (e.g., "100.00") */
+      amount: string;
+      /** Currency code (e.g., "usd") */
+      currency: string;
+      /** Token ID (UUID) */
+      token_id: string;
+      /** Network ID (UUID) */
+      network_id: string;
+      interval_count?: number;
+    });
 
 export interface SubscriptionUpdateParams {
   price_id?: string;

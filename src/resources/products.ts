@@ -48,7 +48,7 @@ export class Products {
     organizationId: string,
     productId: string,
   ): Promise<{ id: string; object: 'product'; deleted: true }> {
-    return this.client.delete(
+    return this.client.delete<{ id: string; object: 'product'; deleted: true }>(
       `organizations/${organizationId}/products/${productId}`,
       undefined,
       true,

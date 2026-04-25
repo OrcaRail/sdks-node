@@ -99,7 +99,8 @@ export class Prices {
           ? p.product.name
           : '';
       if (prodName !== params.productName) return false;
-      const code = (p.currency ?? 'usd').toLowerCase();
+      if (typeof p.currency !== 'string' || p.currency.trim() === '') return false;
+      const code = p.currency.trim().toLowerCase();
       return code === currencyLower && amountsEqual(p.unit_amount_decimal, amountStr);
     });
     return hit ?? null;

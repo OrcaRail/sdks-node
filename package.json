@@ -1,6 +1,6 @@
 {
   "name": "@orcarail/node",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "Official Node.js SDK for OrcaRail - Accept crypto payments with Payment Intents",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
