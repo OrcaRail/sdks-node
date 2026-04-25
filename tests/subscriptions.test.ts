@@ -40,6 +40,8 @@ const baseSubscription: Subscription = {
   latest_payment_link: null,
   withdrawal_addresses: {},
   metadata: null,
+  return_url: null,
+  cancel_url: null,
   created: '2025-01-01T00:00:00Z',
   updated: '2025-01-01T00:00:00Z',
 };

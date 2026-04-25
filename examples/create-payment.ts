@@ -20,8 +20,8 @@ async function createPaymentIntent() {
       amount: '100.00',
       currency: 'usd',
       payment_method_types: ['crypto'],
-      tokenId: 1, // Replace with your token ID (e.g., USDC)
-      networkId: 1, // Replace with your network ID (e.g., Ethereum)
+      tokenId: '1', // Replace with your token ID (e.g., USDC)
+      networkId: '1', // Replace with your network ID (e.g., Ethereum)
       return_url: 'https://merchant.example.com/return',
       cancel_url: 'https://merchant.example.com/cancel',
       description: 'Payment for services',

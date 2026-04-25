@@ -24,7 +24,7 @@ describe('Webhooks', () => {
 
     it('should reject invalid signature', () => {
       const payload = JSON.stringify({
-        type: 'payment_intent.succeeded',
+        type: 'payment_intent.completed',
         data: { object: { id: '123' } },
         created: 1234567890,
       });
@@ -37,7 +37,7 @@ describe('Webhooks', () => {
 
     it('should reject tampered payload', () => {
       const payload = JSON.stringify({
-        type: 'payment_intent.succeeded',
+        type: 'payment_intent.completed',
         data: { object: { id: '123' } },
         created: 1234567890,
       });
@@ -45,7 +45,7 @@ describe('Webhooks', () => {
       const signature = createHmac('sha256', secret).update(payload).digest('hex');
 
       const tamperedPayload = JSON.stringify({
-        type: 'payment_intent.succeeded',
+        type: 'payment_intent.completed',
         data: { object: { id: '456' } }, // Changed ID
         created: 1234567890,
       });
@@ -56,7 +56,7 @@ describe('Webhooks', () => {
 
     it('should handle Buffer input', () => {
       const payload = JSON.stringify({
-        type: 'payment_intent.succeeded',
+        type: 'payment_intent.completed',
         data: { object: { id: '123' } },
         created: 1234567890,
       });
@@ -78,14 +78,14 @@ describe('Webhooks', () => {
   describe('constructEvent', () => {
     it('should construct event with valid signature', () => {
       const event: WebhookEvent = {
-        type: 'payment_intent.succeeded',
+        type: 'payment_intent.completed',
         data: {
           object: {
             id: '123',
             object: 'payment_intent',
             amount: '100.00',
             currency: 'usd',
-            status: 'succeeded',
+            status: 'completed',
             payment_method_types: ['crypto'],
             return_url: 'https://example.com/return',
             createdAt: '2024-01-01T00:00:00.000Z',
@@ -104,7 +104,7 @@ describe('Webhooks', () => {
 
     it('should throw error for invalid signature', () => {
       const payload = JSON.stringify({
-        type: 'payment_intent.succeeded',
+        type: 'payment_intent.completed',
         data: { object: { id: '123' } },
         created: 1234567890,
       });
@@ -127,14 +127,14 @@ describe('Webhooks', () => {
 
     it('should handle Buffer input', () => {
       const event: WebhookEvent = {
-        type: 'payment_intent.succeeded',
+        type: 'payment_intent.completed',
         data: {
           object: {
             id: '123',
             object: 'payment_intent',
             amount: '100.00',
             currency: 'usd',
-            status: 'succeeded',
+            status: 'completed',
             payment_method_types: ['crypto'],
             return_url: 'https://example.com/return',
             createdAt: '2024-01-01T00:00:00.000Z',

@@ -24,8 +24,8 @@ describe('PaymentIntents', () => {
         amount: '100.00',
         currency: 'usd',
         payment_method_types: ['crypto'],
-        tokenId: 1,
-        networkId: 1,
+        tokenId: '1',
+        networkId: '1',
         return_url: 'https://example.com/return',
       };
 
@@ -54,8 +54,8 @@ describe('PaymentIntents', () => {
       const params = {
         amount: '100.00',
         currency: 'usd',
-        tokenId: 1,
-        networkId: 1,
+        tokenId: '1',
+        networkId: '1',
         return_url: 'https://example.com/return',
       };
 
@@ -90,7 +90,7 @@ describe('PaymentIntents', () => {
         object: 'payment_intent',
         amount: '100.00',
         currency: 'usd',
-        status: 'succeeded',
+        status: 'completed',
         payment_method_types: ['crypto'],
         return_url: 'https://example.com/return',
         createdAt: '2024-01-01T00:00:00.000Z',
@@ -114,7 +114,7 @@ describe('PaymentIntents', () => {
         object: 'payment_intent',
         amount: '100.00',
         currency: 'usd',
-        status: 'succeeded',
+        status: 'completed',
         payment_method_types: ['crypto'],
         return_url: 'https://example.com/return',
         createdAt: '2024-01-01T00:00:00.000Z',
