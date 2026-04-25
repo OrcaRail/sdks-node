@@ -48,7 +48,7 @@ describe('Prices', () => {
           recurring: null,
           unit_amount_decimal: '100.00',
           currency: 'usd',
-          product: { id: 'prod_1', name: 'Plan A' } as any,
+          product: { id: 'prod_1', name: 'Plan A' } as ProductSummary,
         },
       ];
 
@@ -71,7 +71,7 @@ describe('Prices', () => {
           recurring: null,
           unit_amount_decimal: '100.00',
           currency: 'eur',
-          product: { id: 'prod_1', name: 'Plan A' } as any,
+          product: { id: 'prod_1', name: 'Plan A' } as ProductSummary,
         },
       ];
 
@@ -94,7 +94,7 @@ describe('Prices', () => {
           recurring: null,
           unit_amount_decimal: '100.00',
           currency: null,
-          product: { id: 'prod_1', name: 'Plan A' } as any,
+          product: { id: 'prod_1', name: 'Plan A' } as ProductSummary,
         },
       ];
 
@@ -122,7 +122,7 @@ describe('Prices', () => {
             recurring: null,
             unit_amount_decimal: '50.00',
             currency: 'usd',
-            product: { id: 'prod_1', name: 'Pro' } as any,
+            product: { id: 'prod_1', name: 'Pro' } as ProductSummary,
           },
         ],
       });
