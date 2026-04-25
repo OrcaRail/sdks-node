@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Prices } from '../src/resources/prices';
 import { HttpClient } from '../src/client';
-import type { CatalogPrice, CatalogProduct } from '../src/types';
+import { CatalogPrice, CatalogProduct, ProductSummary } from '../src/types';
 
 // Mock HttpClient
 const mockClient = {
