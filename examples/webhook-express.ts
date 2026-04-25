@@ -75,14 +75,14 @@ app.post('/webhooks/orcarail', (req, res) => {
 
     // Always return 200 OK immediately
     // Process the event asynchronously if needed
-    res.status(200).json({ received: true });
+    return res.status(200).json({ received: true });
   } catch (error) {
     if (error instanceof Error) {
       console.error('Webhook signature verification failed:', error.message);
     } else {
       console.error('Unknown error:', error);
     }
-    res.status(400).json({ error: 'Invalid signature' });
+    return res.status(400).json({ error: 'Invalid signature' });
   }
 });
 

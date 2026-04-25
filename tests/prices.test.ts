@@ -112,7 +112,6 @@ describe('Prices', () => {
 
   describe('ensureOneTime', () => {
     it('should return existing price if found', async () => {
-      const mockPrice: Partial<CatalogPrice> = { id: 'price_existing' };
       // findOneTimeByAmount will call list
       vi.mocked(mockClient.get).mockResolvedValueOnce({
         object: 'list',
