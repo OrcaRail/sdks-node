@@ -11,7 +11,7 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import OrcaRail from '../src/index';
+import OrcaRail, { WebhookEvent, PaymentIntent } from '../src/index';
 
 // Disable body parsing - we need the raw body for signature verification
 export const config = {
@@ -94,10 +94,10 @@ async function getRawBody(req: NextApiRequest): Promise<Buffer> {
 /**
  * Handle webhook event asynchronously
  */
-async function handleWebhookEvent(event: any): Promise<void> {
+async function handleWebhookEvent(event: WebhookEvent): Promise<void> {
   switch (event.type) {
     case 'payment_intent.completed': {
-      const paymentIntent = event.data.object;
+      const paymentIntent = event.data.object as PaymentIntent;
       console.log('Payment completed:', {
         id: paymentIntent.id,
         amount: paymentIntent.amount,
@@ -108,12 +108,15 @@ async function handleWebhookEvent(event: any): Promise<void> {
     }
 
     case 'payment_intent.processing':
-      console.log('Payment processing:', event.data.object.id);
+      console.log(
+        'Payment processing:',
+        (event.data.object as PaymentIntent).id
+      );
       // TODO: Update order status, notify customer, etc.
       break;
 
     case 'payment_intent.canceled':
-      console.log('Payment canceled:', event.data.object.id);
+      console.log('Payment canceled:', (event.data.object as PaymentIntent).id);
       // TODO: Release inventory, cancel order, notify customer, etc.
       break;
 

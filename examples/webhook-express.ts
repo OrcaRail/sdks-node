@@ -9,7 +9,7 @@
  */
 
 import express from 'express';
-import OrcaRail from '../src/index';
+import OrcaRail, { WebhookEvent, PaymentIntent } from '../src/index';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -87,8 +87,8 @@ app.post('/webhooks/orcarail', (req, res) => {
 });
 
 // Event handlers
-function handlePaymentCompleted(event: any) {
-  const paymentIntent = event.data.object;
+function handlePaymentCompleted(event: WebhookEvent) {
+  const paymentIntent = event.data.object as PaymentIntent;
   console.log('Payment completed:', {
     id: paymentIntent.id,
     amount: paymentIntent.amount,
@@ -99,8 +99,8 @@ function handlePaymentCompleted(event: any) {
   // TODO: Fulfill order, send confirmation email, update database, etc.
 }
 
-function handlePaymentProcessing(event: any) {
-  const paymentIntent = event.data.object;
+function handlePaymentProcessing(event: WebhookEvent) {
+  const paymentIntent = event.data.object as PaymentIntent;
   console.log('Payment processing:', {
     id: paymentIntent.id,
     amount: paymentIntent.amount,
@@ -109,8 +109,8 @@ function handlePaymentProcessing(event: any) {
   // TODO: Update order status, notify customer, etc.
 }
 
-function handlePaymentCanceled(event: any) {
-  const paymentIntent = event.data.object;
+function handlePaymentCanceled(event: WebhookEvent) {
+  const paymentIntent = event.data.object as PaymentIntent;
   console.log('Payment canceled:', {
     id: paymentIntent.id,
     amount: paymentIntent.amount,
@@ -119,8 +119,8 @@ function handlePaymentCanceled(event: any) {
   // TODO: Release inventory, cancel order, notify customer, etc.
 }
 
-function handleRequiresPaymentMethod(event: any) {
-  const paymentIntent = event.data.object;
+function handleRequiresPaymentMethod(event: WebhookEvent) {
+  const paymentIntent = event.data.object as PaymentIntent;
   console.log('Payment requires payment method:', {
     id: paymentIntent.id,
   });
@@ -128,8 +128,8 @@ function handleRequiresPaymentMethod(event: any) {
   // TODO: Track abandoned checkout, send reminder email, etc.
 }
 
-function handleRequiresConfirmation(event: any) {
-  const paymentIntent = event.data.object;
+function handleRequiresConfirmation(event: WebhookEvent) {
+  const paymentIntent = event.data.object as PaymentIntent;
   console.log('Payment requires confirmation:', {
     id: paymentIntent.id,
   });
