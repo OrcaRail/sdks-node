@@ -45,8 +45,8 @@ const intent = await orcarail.paymentIntents.create({
   amount: '100.00',
   currency: 'usd',
   payment_method_types: ['crypto'],
-  tokenId: 1,
-  networkId: 1,
+  tokenId: 'token_uuid',
+  networkId: 'network_uuid',
   return_url: 'https://merchant.example.com/return',
 });
 
@@ -65,14 +65,14 @@ const intent = await orcarail.paymentIntents.create({
   amount: '100.00',
   currency: 'usd',
   payment_method_types: ['crypto'],
-  tokenId: 1,
-  networkId: 1,
+  tokenId: 'token_uuid',
+  networkId: 'network_uuid',
   return_url: 'https://merchant.example.com/return',
   cancel_url: 'https://merchant.example.com/cancel', // optional
   description: 'Payment for services', // optional
   metadata: { order_id: '12345' }, // optional
   expires_at: '2024-12-31T23:59:59Z', // optional
-  withdrawal_address: '0x...', // optional: override where funds are withdrawn; omit to use account default
+  withdrawal_addresses: { evm: '0x...' }, // optional: override by chain; omit to use account defaults
 });
 
 // API keys can have a commission % (dashboard or PATCH /api/v1/api-keys/:id). Payments created with that key include commission in the quote and send it to your withdrawal address.
@@ -100,7 +100,7 @@ const intent = await orcarail.paymentIntents.update('1234567890', {
   amount: '200.00',
   description: 'Updated description',
   metadata: { order_id: '67890' },
-  withdrawal_address: '0x...', // optional: override withdrawal address for this payment
+  withdrawal_addresses: { evm: '0x...' }, // optional: override by chain for this payment
 });
 ```
 

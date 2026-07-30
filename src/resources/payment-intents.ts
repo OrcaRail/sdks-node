@@ -76,7 +76,7 @@ export class PaymentIntents {
    * });
    */
   public async confirm(id: string, params: PaymentIntentConfirmParams): Promise<PaymentIntent> {
-    return this.client.post<PaymentIntent>(`payment_intents/${id}/confirm`, params, false);
+    return this.client.post<PaymentIntent>(`payment_intents/${id}/confirm`, params, true);
   }
 
   /**

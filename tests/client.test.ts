@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { HttpClient } from '../src/client';
 import { OrcaRailError, OrcaRailAPIError, OrcaRailAuthenticationError } from '../src/errors';
+import packageJson from '../package.json';
 
 // Mock global fetch
 const mockFetch = vi.fn();
@@ -54,6 +55,7 @@ describe('HttpClient', () => {
           method: 'GET',
           headers: expect.objectContaining({
             Authorization: expect.stringContaining('Basic'),
+            'User-Agent': `orcarail-node/${packageJson.version}`,
           }),
         })
       );

@@ -153,7 +153,7 @@ describe('PaymentIntents', () => {
 
       const result = await paymentIntents.confirm('123', params);
 
-      expect(mockClient.post).toHaveBeenCalledWith('payment_intents/123/confirm', params, false);
+      expect(mockClient.post).toHaveBeenCalledWith('payment_intents/123/confirm', params, true);
       expect(result).toEqual(mockResponse);
     });
   });

@@ -1,9 +1,10 @@
 import { OrcaRailAPIError, OrcaRailAuthenticationError, OrcaRailError } from './errors';
 import type { OrcaRailConfig } from './types';
+import packageJson from '../package.json';
 
 const DEFAULT_BASE_URL = 'https://api.orcarail.com/api/v1';
 const DEFAULT_TIMEOUT = 30000;
-const SDK_VERSION = '1.0.0';
+const SDK_VERSION = packageJson.version;
 
 /**
  * HTTP client for making requests to the OrcaRail API
