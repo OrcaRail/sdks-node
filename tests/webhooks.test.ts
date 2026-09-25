@@ -79,6 +79,7 @@ describe('Webhooks', () => {
     it('should construct event with valid signature', () => {
       const event: WebhookEvent = {
         type: 'payment_intent.completed',
+        livemode: true,
         data: {
           object: {
             id: '123',
@@ -128,6 +129,7 @@ describe('Webhooks', () => {
     it('should handle Buffer input', () => {
       const event: WebhookEvent = {
         type: 'payment_intent.completed',
+        livemode: true,
         data: {
           object: {
             id: '123',

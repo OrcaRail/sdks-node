@@ -96,6 +96,22 @@ export class PaymentIntents {
   }
 
   /**
+   * Sandbox only: complete a payment without an on-chain transfer (no wallet or faucet
+   * needed). Fires the usual webhooks with `livemode: false` and
+   * `latest_transaction.simulated: true`. Requires a sandbox (`ak_test_`) key; the API
+   * returns 403 `SIMULATION_SANDBOX_ONLY` for live organizations.
+   *
+   * @param id - Payment Intent ID (raw, no prefix)
+   * @returns The Payment Intent after simulation
+   *
+   * @example
+   * const intent = await orcarail.paymentIntents.simulate('34');
+   */
+  public async simulate(id: string): Promise<PaymentIntent> {
+    return this.client.post<PaymentIntent>(`payment_intents/${id}/simulate`, {}, true);
+  }
+
+  /**
    * Update a Payment Intent
    *
    * @param id - Payment Intent ID (raw, no prefix)

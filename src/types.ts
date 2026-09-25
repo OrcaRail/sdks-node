@@ -750,6 +750,12 @@ export interface WebhookEvent {
   type: WebhookEventType;
 
   /**
+   * false for events from a sandbox (testnet) organization: test payments, no real funds.
+   * Never fulfill real orders from events with `livemode: false`.
+   */
+  livemode: boolean;
+
+  /**
    * Event data
    */
   data: WebhookEventData;

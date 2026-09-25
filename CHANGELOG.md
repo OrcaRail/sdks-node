@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `OrcaRail#livemode`: `false` for sandbox (`ak_test_`) keys.
+- `paymentIntents.simulate(id)`: sandbox only; completes a payment without an on-chain transfer.
+- `WebhookEvent.livemode`: `false` for events from sandbox (testnet) organizations.
+
 ## [3.3.0] - 2026-07-30
 
 ### Fixed

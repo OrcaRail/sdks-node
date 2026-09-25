@@ -128,14 +128,22 @@ export class OrcaRail {
   private readonly client: HttpClient;
 
   /**
+   * false when this client uses a sandbox (testnet) key (`ak_test_…`), true for live keys
+   * (`ak_live_…`). The API always decides the mode from the key's organization; this is a
+   * convenience for your own code (e.g. never fulfill real orders in test mode).
+   */
+  public readonly livemode: boolean;
+
+  /**
    * Create a new OrcaRail client instance
    *
-   * @param apiKey - Your OrcaRail API key (e.g., "ak_live_xxx")
-   * @param apiSecret - Your OrcaRail API secret (e.g., "sk_live_xxx")
+   * @param apiKey - Your OrcaRail API key: "ak_live_xxx" (live) or "ak_test_xxx" (sandbox)
+   * @param apiSecret - Your OrcaRail API secret: "sk_live_xxx" or "sk_test_xxx"
    * @param config - Optional configuration
    */
   constructor(apiKey: string, apiSecret: string, config?: OrcaRailConfig) {
     this.client = new HttpClient(apiKey, apiSecret, config);
+    this.livemode = !apiKey.trim().startsWith('ak_test_');
     this.paymentIntents = new PaymentIntents(this.client);
     this.subscriptions = new Subscriptions(this.client);
     this.pay = new Pay(this.client);
