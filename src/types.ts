@@ -471,7 +471,6 @@ export interface ProductCreateParams {
   unit_label?: string | null;
   shippable?: boolean | null;
   url?: string | null;
-  livemode?: boolean;
 }
 
 /** @deprecated Use ProductCreateParams */
@@ -489,7 +488,6 @@ export interface ProductUpdateParams {
   unit_label?: string | null;
   shippable?: boolean | null;
   url?: string | null;
-  livemode?: boolean;
 }
 
 /** @deprecated Use ProductUpdateParams */
