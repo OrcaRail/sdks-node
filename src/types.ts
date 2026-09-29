@@ -471,7 +471,6 @@ export interface ProductCreateParams {
   unit_label?: string | null;
   shippable?: boolean | null;
   url?: string | null;
-  livemode?: boolean;
 }
 
 /** @deprecated Use ProductCreateParams */
@@ -489,7 +488,6 @@ export interface ProductUpdateParams {
   unit_label?: string | null;
   shippable?: boolean | null;
   url?: string | null;
-  livemode?: boolean;
 }
 
 /** @deprecated Use ProductUpdateParams */
@@ -748,6 +746,12 @@ export interface WebhookEvent {
    * Event type
    */
   type: WebhookEventType;
+
+  /**
+   * false for events from a sandbox (testnet) organization: test payments, no real funds.
+   * Never fulfill real orders from events with `livemode: false`.
+   */
+  livemode: boolean;
 
   /**
    * Event data

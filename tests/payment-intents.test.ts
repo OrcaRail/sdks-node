@@ -186,4 +186,14 @@ describe('PaymentIntents', () => {
       expect(result).toEqual(mockResponse);
     });
   });
+
+  describe('simulate', () => {
+    it('should post to the sandbox simulate endpoint', async () => {
+      vi.mocked(mockClient.post).mockResolvedValueOnce({ id: '34', status: 'completed' });
+
+      await paymentIntents.simulate('34');
+
+      expect(mockClient.post).toHaveBeenCalledWith('payment_intents/34/simulate', {}, true);
+    });
+  });
 });

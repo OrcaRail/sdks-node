@@ -54,6 +54,20 @@ console.log('Payment Intent ID:', intent.id);
 console.log('Client Secret:', intent.client_secret);
 ```
 
+## Live vs sandbox
+
+A **sandbox organization** (created from **Go to sandbox** in the dashboard) is testnet-only and issues `ak_test_` / `sk_test_` keys. Live organizations use `ak_live_` / `sk_live_`.
+
+```typescript
+const orcarail = new OrcaRail(process.env.ORCARAIL_API_KEY!, process.env.ORCARAIL_API_SECRET!);
+orcarail.livemode; // false for ak_test_ keys
+
+// Sandbox only: complete a payment without a wallet (fires the usual webhooks)
+await orcarail.paymentIntents.simulate(intent.id);
+```
+
+Webhook events carry `livemode` (`false` for sandbox events). Never fulfill real orders from `livemode: false` events. See [Sandbox](https://docs.orcarail.com/docs/sandbox/overview/).
+
 ## API Reference
 
 ### Payment Intents
