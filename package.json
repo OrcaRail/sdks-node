@@ -1,6 +1,6 @@
 {
   "name": "@orcarail/node",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "description": "Official Node.js SDK for OrcaRail - Accept crypto payments with Payment Intents",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -55,20 +55,20 @@
   },
   "homepage": "https://github.com/OrcaRail/sdks-node#readme",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.0",
+    "@typescript-eslint/parser": "^8.72.0",
     "eslint": "^8.0.0",
     "express": "^5.2.1",
     "next": "^16.2.4",
     "prettier": "^3.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
-    "vitest": "^1.0.0"
+    "vitest": "^4.1.12"
   },
   "peerDependencies": {
     "@types/express": "^4.17.0",
@@ -81,5 +81,8 @@
     "@types/node": {
       "optional": true
     }
+  },
+  "overrides": {
+    "esbuild": "^0.28.1"
   }
 }

@@ -155,3 +155,50 @@ describe('Webhooks', () => {
     });
   });
 });
+
+describe('Webhooks.constructEventFromHeaders (timestamped v2)', () => {
+  const webhooks = new Webhooks();
+  const secret = 'test_secret_key';
+  const body = JSON.stringify({ type: 'payment_intent.completed', data: { object: { id: 'pi_1' } } });
+  const now = 1_700_000_000;
+  const sign = (t: number, payload = body) =>
+    createHmac('sha256', secret).update(`${t}.${payload}`).digest('hex');
+  const headers = (t: number, sig = sign(t)) => ({
+    'x-webhook-timestamp': String(t),
+    'x-webhook-signature-v2': sig,
+  });
+
+  it('accepts a fresh, correctly signed delivery', () => {
+    const event = webhooks.constructEventFromHeaders(body, headers(now - 10), secret, { now });
+    expect(event.type).toBe('payment_intent.completed');
+  });
+
+  it('accepts array header values (Node IncomingHttpHeaders)', () => {
+    const event = webhooks.constructEventFromHeaders(
+      body,
+      { 'x-webhook-timestamp': [String(now)], 'x-webhook-signature-v2': [sign(now)] },
+      secret,
+      { now }
+    );
+    expect(event.type).toBe('payment_intent.completed');
+  });
+
+  it('rejects a replayed delivery older than the tolerance', () => {
+    expect(() =>
+      webhooks.constructEventFromHeaders(body, headers(now - 301), secret, { now })
+    ).toThrow(OrcaRailSignatureVerificationError);
+  });
+
+  it('rejects a delivery whose timestamp was changed', () => {
+    expect(() =>
+      webhooks.constructEventFromHeaders(body, headers(now, sign(now - 3600)), secret, { now })
+    ).toThrow(OrcaRailSignatureVerificationError);
+  });
+
+  it('rejects deliveries without v2 headers (no fallback to v1)', () => {
+    const v1 = createHmac('sha256', secret).update(body).digest('hex');
+    expect(() =>
+      webhooks.constructEventFromHeaders(body, { 'x-webhook-signature': v1 }, secret, { now })
+    ).toThrow(OrcaRailSignatureVerificationError);
+  });
+});
