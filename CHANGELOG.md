@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.5.0] - 2026-10-24
+
+### Added
+
+- `webhooks.constructEventFromHeaders(payload, headers, secret, toleranceSeconds?)`: verifies the timestamped `x-webhook-signature-v2` (HMAC of `"<timestamp>.<body>"`) and rejects deliveries older than 5 minutes (replay protection). Prefer it over `constructEvent`.
+
+### Security
+
+- Dev tooling upgraded (Vitest 4, typescript-eslint 8, esbuild 0.28). `npm audit` reports 0 issues.
+
 ## [3.4.0] - 2026-09-29
 
 ### Added
