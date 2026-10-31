@@ -80,15 +80,18 @@ export class PaymentIntents {
   }
 
   /**
-   * Complete a Payment Intent (API: POST /payment_intents/:id/complete).
-   * Sets the intent to processing; when payment is done, payment_intent.completed is sent.
-   * Use when the user is redirected to your success/return URL (e.g. https://yourapp.com/success?payment_intent=34).
+   * Complete a Payment Intent (API: POST /payment_intents/:id/complete). **Required:** call it
+   * from your backend when the customer returns to your success/return URL
+   * (`?payment_intent=<id>`). OrcaRail keeps a paid intent `processing` until it is completed;
+   * until then the payment is not final, never withdrawn and no `payment_intent.completed`
+   * webhook is sent. Returns `completed` once the payment is confirmed on-chain; while it is
+   * still `processing`, call it again later.
    *
    * @param id - Payment Intent ID (raw, no prefix)
-   * @returns The updated Payment Intent (status processing)
+   * @returns The Payment Intent (`completed`, or `processing` while the payment is unconfirmed)
    *
    * @example
-   * // When user lands on https://localhost:3001/success?payment_intent=34
+   * // When the customer lands on https://yourapp.com/success?payment_intent=34
    * const intent = await orcarail.paymentIntents.complete('34');
    */
   public async complete(id: string): Promise<PaymentIntent> {

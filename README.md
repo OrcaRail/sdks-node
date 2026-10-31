@@ -107,6 +107,17 @@ const intent = await orcarail.paymentIntents.confirm('1234567890', {
 });
 ```
 
+#### Complete a Payment Intent (required)
+
+Call this from your backend when the customer returns to your `return_url` (`?payment_intent=<id>`). OrcaRail keeps a paid intent `processing` until it is completed; until then the payment is not final, is never withdrawn and no `payment_intent.completed` webhook is sent. While the payment is still unconfirmed it returns `processing`: call it again later.
+
+```typescript
+const intent = await orcarail.paymentIntents.complete('1234567890');
+if (intent.status === 'completed') {
+  // fulfill the order
+}
+```
+
 #### Update a Payment Intent
 
 ```typescript
