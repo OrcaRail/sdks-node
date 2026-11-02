@@ -93,7 +93,7 @@ function handlePaymentCompleted(event: WebhookEvent) {
     id: paymentIntent.id,
     amount: paymentIntent.amount,
     currency: paymentIntent.currency,
-    transaction: paymentIntent.latestTransaction,
+    transaction: paymentIntent.latest_transaction,
   });
 
   // TODO: Fulfill order, send confirmation email, update database, etc.

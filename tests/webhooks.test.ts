@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createHmac } from 'crypto';
 import { Webhooks } from '../src/webhooks';
 import { OrcaRailSignatureVerificationError } from '../src/errors';
-import type { WebhookEvent } from '../src/types';
+import type { PaymentIntent, WebhookEvent, WebhookEventType } from '../src/types';
 
 describe('Webhooks', () => {
   const webhooks = new Webhooks();
@@ -200,5 +200,50 @@ describe('Webhooks.constructEventFromHeaders (timestamped v2)', () => {
     expect(() =>
       webhooks.constructEventFromHeaders(body, { 'x-webhook-signature': v1 }, secret, { now })
     ).toThrow(OrcaRailSignatureVerificationError);
+  });
+
+  describe('event types sent by the API', () => {
+    const sign = (payload: string) => createHmac('sha256', secret).update(payload).digest('hex');
+
+    it('constructs every subscription event the API sends', () => {
+      const sent: WebhookEventType[] = [
+        'subscription.collection_method.updated',
+        'subscription.payer_wallet.verified',
+        'subscription.auto_charge.allowance_insufficient',
+        'subscription.auto_charge.canceled_insufficient_allowance',
+        'subscription.auto_charge.canceled_insufficient_balance',
+      ];
+      for (const type of sent) {
+        const payload = JSON.stringify({ type, data: { object: { id: 'sub_1' } }, created: 1 });
+        expect(webhooks.constructEvent(payload, sign(payload), secret).type).toBe(type);
+      }
+    });
+
+    it('exposes the snake_case latest_transaction on payment intent payloads', () => {
+      const payload = JSON.stringify({
+        type: 'payment_intent.completed',
+        data: {
+          object: {
+            id: 'pi_1',
+            status: 'completed',
+            latest_transaction: {
+              id: 'tx_1',
+              status: 'completed',
+              hash: '0xabc',
+              amount_received: '10.00',
+              address: '0x1',
+              confirmations: 3,
+              simulated: false,
+            },
+            created_at: '2026-01-01T00:00:00.000Z',
+          },
+        },
+        created: 1,
+      });
+      const intent = webhooks.constructEvent(payload, sign(payload), secret).data.object as PaymentIntent;
+      expect(intent.latest_transaction?.amount_received).toBe('10.00');
+      expect(intent.latest_transaction?.confirmations).toBe(3);
+      expect(intent.created_at).toBe('2026-01-01T00:00:00.000Z');
+    });
   });
 });
