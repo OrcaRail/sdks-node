@@ -201,7 +201,53 @@ export type PaymentStatus =
   | 'withdrawn';
 
 /**
- * Latest transaction details
+ * Latest transaction on a payment intent, as returned in `latest_transaction`
+ * by retrieve, confirm, cancel and complete (and in webhook payloads).
+ */
+export interface PaymentIntentLatestTransaction {
+  /** Transaction ID */
+  id: string;
+
+  /** Transaction status (enum value from API) */
+  status: PaymentStatus;
+
+  /** On-chain transaction hash, once known */
+  hash: string | null;
+
+  /** Amount received, once confirmed */
+  amount_received: string | null;
+
+  /** Deposit address the payer sends to */
+  address: string | null;
+
+  /** Confirmations seen so far */
+  confirmations: number;
+
+  /** Token the payer paid with (API responses) */
+  paid_token?: { id: string; symbol: string; name: string };
+
+  /** Network the payer paid on (API responses) */
+  paid_network?: { id: string; name: string };
+
+  /** `true` for simulated sandbox payments (webhook payloads) */
+  simulated?: boolean;
+}
+
+/**
+ * Next action returned by confirm: redirect the customer to `redirect_to_url.url`.
+ */
+export interface PaymentIntentNextAction {
+  type: 'redirect_to_url';
+  redirect_to_url: {
+    /** Hosted pay page URL with payment_intent, payment_intent_client_secret and return_url params */
+    url: string;
+    return_url: string;
+  };
+}
+
+/**
+ * @deprecated The API never returns this shape. Use {@link PaymentIntentLatestTransaction}
+ * (`PaymentIntent.latest_transaction`).
  */
 export interface LatestTransaction {
   /**
@@ -269,13 +315,33 @@ export interface PaymentIntent {
    */
   payment_method_types: string[];
 
-  /** Catalog price UUID */
+  /** Organization ID */
+  organization_id?: string;
+
+  /** Display amount and currency (when the intent was priced in another fiat currency) */
+  display_amount?: string;
+  display_currency?: string;
+
+  /** Original amount and currency before conversion */
+  original_amount?: string;
+  original_currency?: string;
+
+  /** Currency rate used for conversion */
+  currency_rate_id?: string;
+
+  /**
+   * @deprecated Not returned by the API in payment intent responses.
+   */
   price_id?: string;
 
-  /** Expanded catalog price context */
+  /**
+   * @deprecated Not returned by the API in payment intent responses.
+   */
   price?: CatalogPriceSummary | null;
 
-  /** Expanded catalog product context */
+  /**
+   * @deprecated Not returned by the API in payment intent responses.
+   */
   product?: CatalogProductSummary | null;
 
   /**
@@ -314,24 +380,46 @@ export interface PaymentIntent {
   payment_link?: PaymentLink;
 
   /**
-   * Expiration timestamp
+   * Redirect instructions, returned by confirm
+   */
+  next_action?: PaymentIntentNextAction;
+
+  /**
+   * Latest transaction, returned by retrieve, confirm, cancel and complete
+   */
+  latest_transaction?: PaymentIntentLatestTransaction;
+
+  /**
+   * Amount received so far for a paid intent (with its currency), returned by retrieve and complete
+   */
+  amount_paid?: string;
+  amount_paid_currency?: string;
+
+  /**
+   * Timestamps in webhook payloads (ISO 8601). Not included in API responses.
+   */
+  created_at?: string;
+  updated_at?: string;
+
+  /**
+   * @deprecated Never returned by the API.
    */
   expiresAt?: string;
 
   /**
-   * Latest transaction details (for completed intents)
+   * @deprecated Never returned by the API. Use `latest_transaction`.
    */
   latestTransaction?: LatestTransaction;
 
   /**
-   * Creation timestamp
+   * @deprecated Never returned by the API. Webhook payloads carry `created_at`.
    */
-  createdAt: string;
+  createdAt?: string;
 
   /**
-   * Last update timestamp
+   * @deprecated Never returned by the API. Webhook payloads carry `updated_at`.
    */
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 /**
@@ -708,7 +796,7 @@ export interface SubscriptionPaymentLinksListParams {
 }
 
 /**
- * Webhook event types
+ * Webhook event types the API sends.
  */
 export type WebhookEventType =
   | 'payment_intent.completed'
@@ -721,10 +809,26 @@ export type WebhookEventType =
   | 'subscription.canceled'
   | 'subscription.paused'
   | 'subscription.resumed'
-  | 'subscription.trial_will_end'
+  | 'subscription.collection_method.updated'
+  | 'subscription.payer_wallet.verified'
   | 'subscription.payment_link.created'
   | 'subscription.payment_link.paid'
   | 'subscription.payment_link.payment_failed'
+  | 'subscription.auto_charge.allowance_insufficient'
+  | 'subscription.auto_charge.canceled_insufficient_allowance'
+  | 'subscription.auto_charge.canceled_insufficient_balance'
+  | DeprecatedWebhookEventType;
+
+/**
+ * @deprecated The API never sends these events. They stay in {@link WebhookEventType} only so
+ * existing handlers keep compiling; remove them from your code.
+ * - `subscription.past_due`: a failed auto-charge sends `subscription.payment_link.payment_failed`
+ *   (payload `status: "past_due"`) or `subscription.auto_charge.allowance_insufficient`.
+ * - `subscription.trial_will_end`: OrcaRail emails the payer about 3 days before `trial_end`; no webhook.
+ * - `subscription.completed`: no webhook when the last cycle is billed.
+ */
+export type DeprecatedWebhookEventType =
+  | 'subscription.trial_will_end'
   | 'subscription.past_due'
   | 'subscription.completed';
 

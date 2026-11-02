@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [3.6.0] - 2026-11-02
+
+### Added
+
+- `WebhookEventType`: the subscription events the API sends but the type was missing: `subscription.collection_method.updated`, `subscription.payer_wallet.verified`, `subscription.auto_charge.allowance_insufficient`, `subscription.auto_charge.canceled_insufficient_allowance`, `subscription.auto_charge.canceled_insufficient_balance`.
+- `PaymentIntent`: fields the API returns: `next_action` (`PaymentIntentNextAction`), `latest_transaction` (`PaymentIntentLatestTransaction`: `hash`, `amount_received`, `address`, `confirmations`, `paid_token`, `paid_network`, `simulated`), `amount_paid`, `amount_paid_currency`, `organization_id`, `display_amount`, `display_currency`, `original_amount`, `original_currency`, `currency_rate_id`, and webhook `created_at` / `updated_at`.
+
+### Deprecated
+
+- `subscription.trial_will_end`, `subscription.past_due` and `subscription.completed` (now `DeprecatedWebhookEventType`): the API never sends them. They stay in the union so existing handlers compile. Use `subscription.payment_link.payment_failed` (payload `status: "past_due"`) or `subscription.auto_charge.allowance_insufficient` instead of `subscription.past_due`.
+- `PaymentIntent.latestTransaction`, `expiresAt`, `createdAt`, `updatedAt`, `price_id`, `price`, `product` and the `LatestTransaction` type: never returned by the API. `createdAt` / `updatedAt` are now optional to match runtime.
+
+### Fixed
+
+- `examples/webhook-express.ts` reads `latest_transaction` (the field webhooks actually carry).
+
 ## [3.5.1] - 2026-10-31
 
 ### Changed
