@@ -1,4 +1,5 @@
 import { HttpClient } from '../client';
+import { pathSegment } from '../path-segment';
 import type {
   PaymentLink,
   Subscription,
@@ -86,7 +87,7 @@ export class Subscriptions {
    * @returns The subscription
    */
   public async retrieve(id: string): Promise<Subscription> {
-    return this.client.get<Subscription>(`subscriptions/${id}`, true);
+    return this.client.get<Subscription>(`subscriptions/${pathSegment(id)}`, true);
   }
 
   /**
@@ -97,7 +98,7 @@ export class Subscriptions {
    * @returns The updated subscription
    */
   public async update(id: string, params: SubscriptionUpdateParams): Promise<Subscription> {
-    return this.client.patch<Subscription>(`subscriptions/${id}`, params, true);
+    return this.client.patch<Subscription>(`subscriptions/${pathSegment(id)}`, params, true);
   }
 
   /**
@@ -108,7 +109,7 @@ export class Subscriptions {
    * @returns The canceled subscription
    */
   public async cancel(id: string, params?: SubscriptionCancelParams): Promise<Subscription> {
-    return this.client.delete<Subscription>(`subscriptions/${id}`, params ?? undefined, true);
+    return this.client.delete<Subscription>(`subscriptions/${pathSegment(id)}`, params ?? undefined, true);
   }
 
   /**
@@ -118,7 +119,7 @@ export class Subscriptions {
    * @returns The resumed subscription
    */
   public async resume(id: string): Promise<Subscription> {
-    return this.client.post<Subscription>(`subscriptions/${id}/resume`, {}, true);
+    return this.client.post<Subscription>(`subscriptions/${pathSegment(id)}/resume`, {}, true);
   }
 
   /**
@@ -145,7 +146,7 @@ export class Subscriptions {
   ): Promise<{ data: PaymentLink[]; has_more: boolean }> {
     const query = buildPaymentLinksQuery(params);
     return this.client.get<{ data: PaymentLink[]; has_more: boolean }>(
-      `subscriptions/${id}/payment-links${query}`,
+      `subscriptions/${pathSegment(id)}/payment-links${query}`,
       true
     );
   }

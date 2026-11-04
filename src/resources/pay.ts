@@ -1,4 +1,5 @@
 import { HttpClient } from '../client';
+import { pathSegment } from '../path-segment';
 import type { PaymentIntent } from '../types';
 
 /**
@@ -18,7 +19,7 @@ export class Pay {
    * @returns Pay details including payment intent
    */
   public async get(slug: string): Promise<PaymentIntent & Record<string, unknown>> {
-    const path = `pay/${encodeURIComponent(slug)}`;
+    const path = `pay/${pathSegment(slug, 'slug')}`;
     return this.client.get<PaymentIntent & Record<string, unknown>>(path, true);
   }
 
@@ -29,7 +30,7 @@ export class Pay {
    * @returns The canceled payment intent and optional cancel_url for redirect
    */
   public async cancel(slug: string): Promise<PaymentIntent & { cancel_url?: string }> {
-    const path = `pay/${encodeURIComponent(slug)}/cancel`;
+    const path = `pay/${pathSegment(slug, 'slug')}/cancel`;
     return this.client.post<PaymentIntent & { cancel_url?: string }>(path, {}, true);
   }
 }

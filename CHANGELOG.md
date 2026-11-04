@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Resource methods now refuse an id, organization id or slug that would change the request path (empty or blank, `.`, `..`, or containing `/`, `\`, `?`, `#` or NUL) and throw `OrcaRailError` before sending anything. Other characters are percent-encoded. Previously an id taken from request input, such as `?payment_intent=../subscriptions`, could reach another endpoint with your API key.
+
 ## [3.6.0] - 2026-11-02
 
 ### Added

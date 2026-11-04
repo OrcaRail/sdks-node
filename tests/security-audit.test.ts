@@ -20,7 +20,18 @@ const mockClient = {
   delete: vi.fn().mockResolvedValue({}),
 } as unknown as HttpClient;
 
-const UNSAFE_IDS = ['../subscriptions?limit=100', '..', '.', '', 'a/b', 'x#y', 'x?y'];
+const UNSAFE_IDS = [
+  '../subscriptions?limit=100',
+  '..',
+  '.',
+  '',
+  '  ',
+  'a/b',
+  'a\\b',
+  'x#y',
+  'x?y',
+  'x\0y',
+];
 
 const intents = new PaymentIntents(mockClient);
 const subscriptions = new Subscriptions(mockClient);
@@ -53,18 +64,15 @@ const CALLS: Array<[string, (id: string) => Promise<unknown>]> = [
 describe('path segment safety (NODE-1)', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it.fails.each(CALLS)(
-    'NODE-1: %s refuses ids that change the request path',
-    async (_name, call) => {
-      for (const id of UNSAFE_IDS) {
-        await expect(call(id), `id ${JSON.stringify(id)}`).rejects.toThrow();
-      }
-      const client = mockClient as unknown as Record<string, ReturnType<typeof vi.fn>>;
-      for (const method of ['get', 'post', 'patch', 'delete']) {
-        expect(client[method]).not.toHaveBeenCalled();
-      }
+  it.each(CALLS)('NODE-1: %s refuses ids that change the request path', async (_name, call) => {
+    for (const id of UNSAFE_IDS) {
+      await expect(call(id), `id ${JSON.stringify(id)}`).rejects.toThrow();
     }
-  );
+    const client = mockClient as unknown as Record<string, ReturnType<typeof vi.fn>>;
+    for (const method of ['get', 'post', 'patch', 'delete']) {
+      expect(client[method]).not.toHaveBeenCalled();
+    }
+  });
 
   it.each(CALLS)('%s still accepts a normal id', async (_name, call) => {
     await call('pi_123-abc_DEF');

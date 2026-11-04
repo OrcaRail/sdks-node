@@ -1,4 +1,5 @@
 import { HttpClient } from '../client';
+import { pathSegment } from '../path-segment';
 import { Products } from './products';
 import type {
   PriceCreateParams,
@@ -43,7 +44,7 @@ export class Prices {
   public async list(organizationId: string, params?: PriceListParams): Promise<CatalogPrice[]> {
     const q = buildListQuery(params);
     const body = await this.client.get<CatalogListEnvelope<CatalogPrice>>(
-      `organizations/${organizationId}/prices${q}`,
+      `organizations/${pathSegment(organizationId, 'organizationId')}/prices${q}`,
       true,
     );
     return this.unwrapList(body);
@@ -51,7 +52,7 @@ export class Prices {
 
   public async create(organizationId: string, params: PriceCreateParams): Promise<CatalogPrice> {
     return this.client.post<CatalogPrice>(
-      `organizations/${organizationId}/prices`,
+      `organizations/${pathSegment(organizationId, 'organizationId')}/prices`,
       params,
       true,
     );
@@ -63,7 +64,7 @@ export class Prices {
     params: PriceUpdateParams,
   ): Promise<CatalogPrice> {
     return this.client.patch<CatalogPrice>(
-      `organizations/${organizationId}/prices/${priceId}`,
+      `organizations/${pathSegment(organizationId, 'organizationId')}/prices/${pathSegment(priceId, 'priceId')}`,
       params,
       true,
     );
@@ -71,7 +72,7 @@ export class Prices {
 
   public async deactivate(organizationId: string, priceId: string): Promise<CatalogPrice> {
     return this.client.delete<CatalogPrice>(
-      `organizations/${organizationId}/prices/${priceId}`,
+      `organizations/${pathSegment(organizationId, 'organizationId')}/prices/${pathSegment(priceId, 'priceId')}`,
       undefined,
       true,
     );
