@@ -87,7 +87,7 @@ describe('path segment safety (NODE-1)', () => {
  * `constructEvent`, which has no timestamp, so a captured delivery can be replayed forever.
  */
 describe('webhook examples (NODE-2)', () => {
-  it.fails.each(['webhook-express.ts', 'webhook-nextjs.ts'])(
+  it.each(['webhook-express.ts', 'webhook-nextjs.ts'])(
     'NODE-2: examples/%s verifies the timestamped v2 signature',
     (file) => {
       const source = readFileSync(join(__dirname, '..', 'examples', file), 'utf8');

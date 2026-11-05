@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- The README and the Express and Next.js webhook examples now verify with `webhooks.constructEventFromHeaders` (timestamped v2 signature, rejects replays) instead of the replayable v1 `constructEvent`.
 - Resource methods now refuse an id, organization id or slug that would change the request path (empty or blank, `.`, `..`, or containing `/`, `\`, `?`, `#` or NUL) and throw `OrcaRailError` before sending anything. Other characters are percent-encoded. Previously an id taken from request input, such as `?payment_intent=../subscriptions`, could reach another endpoint with your API key.
 
 ## [3.6.0] - 2026-11-02
