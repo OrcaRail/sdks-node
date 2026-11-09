@@ -28,13 +28,7 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const signature = req.headers['x-webhook-signature'] as string;
   const webhookSecret = process.env.ORCARAIL_WEBHOOK_SECRET;
-
-  if (!signature) {
-    console.error('Missing x-webhook-signature header');
-    return res.status(400).json({ error: 'Missing signature header' });
-  }
 
   if (!webhookSecret) {
     console.error('ORCARAIL_WEBHOOK_SECRET not configured');
@@ -53,10 +47,11 @@ export default async function handler(
   );
 
   try {
-    // Verify webhook signature and parse event
-    const event = orcarail.webhooks.constructEvent(
+    // Verify the timestamped signature (x-webhook-timestamp + x-webhook-signature-v2) and parse
+    // the event. It also rejects deliveries older than 5 minutes (replay protection).
+    const event = orcarail.webhooks.constructEventFromHeaders(
       rawBody,
-      signature,
+      req.headers,
       webhookSecret
     );
 
@@ -132,11 +127,10 @@ async function handleWebhookEvent(event: WebhookEvent): Promise<void> {
  * import OrcaRail from '../../../src/index';
  *
  * export async function POST(req: NextRequest) {
- *   const signature = req.headers.get('x-webhook-signature');
  *   const webhookSecret = process.env.ORCARAIL_WEBHOOK_SECRET;
  *
- *   if (!signature || !webhookSecret) {
- *     return NextResponse.json({ error: 'Missing signature or secret' }, { status: 400 });
+ *   if (!webhookSecret) {
+ *     return NextResponse.json({ error: 'Webhook secret not configured' }, { status: 500 });
  *   }
  *
  *   const rawBody = await req.text();
@@ -146,7 +140,11 @@ async function handleWebhookEvent(event: WebhookEvent): Promise<void> {
  *   );
  *
  *   try {
- *     const event = orcarail.webhooks.constructEvent(rawBody, signature, webhookSecret);
+ *     const event = orcarail.webhooks.constructEventFromHeaders(
+ *       rawBody,
+ *       Object.fromEntries(req.headers),
+ *       webhookSecret
+ *     );
  *     // Handle event...
  *     return NextResponse.json({ received: true });
  *   } catch (error) {

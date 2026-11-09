@@ -139,13 +139,14 @@ import express from 'express';
 const app = express();
 
 app.post('/webhooks/orcarail', express.raw({ type: 'application/json' }), (req, res) => {
-  const signature = req.headers['x-webhook-signature'] as string;
   const webhookSecret = process.env.ORCARAIL_WEBHOOK_SECRET!;
 
   try {
-    const event = orcarail.webhooks.constructEvent(
+    // Checks x-webhook-timestamp + x-webhook-signature-v2 and rejects deliveries older
+    // than 5 minutes, so a captured request cannot be replayed.
+    const event = orcarail.webhooks.constructEventFromHeaders(
       req.body,
-      signature,
+      req.headers,
       webhookSecret
     );
 

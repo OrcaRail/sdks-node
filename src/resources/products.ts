@@ -1,4 +1,5 @@
 import { HttpClient } from '../client';
+import { pathSegment } from '../path-segment';
 import type {
   ProductCreateParams,
   ProductUpdateParams,
@@ -15,7 +16,7 @@ export class Products {
 
   public async list(organizationId: string): Promise<CatalogProduct[]> {
     const body = await this.client.get<CatalogListEnvelope<CatalogProduct>>(
-      `organizations/${organizationId}/products`,
+      `organizations/${pathSegment(organizationId, 'organizationId')}/products`,
       true,
     );
     return this.unwrapList(body);
@@ -26,7 +27,7 @@ export class Products {
     params: ProductCreateParams,
   ): Promise<CatalogProduct> {
     return this.client.post<CatalogProduct>(
-      `organizations/${organizationId}/products`,
+      `organizations/${pathSegment(organizationId, 'organizationId')}/products`,
       params,
       true,
     );
@@ -38,7 +39,7 @@ export class Products {
     params: ProductUpdateParams,
   ): Promise<CatalogProduct> {
     return this.client.patch<CatalogProduct>(
-      `organizations/${organizationId}/products/${productId}`,
+      `organizations/${pathSegment(organizationId, 'organizationId')}/products/${pathSegment(productId, 'productId')}`,
       params,
       true,
     );
@@ -49,7 +50,7 @@ export class Products {
     productId: string,
   ): Promise<{ id: string; object: 'product'; deleted: true }> {
     return this.client.delete<{ id: string; object: 'product'; deleted: true }>(
-      `organizations/${organizationId}/products/${productId}`,
+      `organizations/${pathSegment(organizationId, 'organizationId')}/products/${pathSegment(productId, 'productId')}`,
       undefined,
       true,
     );

@@ -26,13 +26,7 @@ app.use('/webhooks/orcarail', express.raw({ type: 'application/json' }));
 
 // Webhook endpoint
 app.post('/webhooks/orcarail', (req, res) => {
-  const signature = req.headers['x-webhook-signature'] as string;
   const webhookSecret = process.env.ORCARAIL_WEBHOOK_SECRET;
-
-  if (!signature) {
-    console.error('Missing x-webhook-signature header');
-    return res.status(400).json({ error: 'Missing signature header' });
-  }
 
   if (!webhookSecret) {
     console.error('ORCARAIL_WEBHOOK_SECRET not configured');
@@ -40,10 +34,12 @@ app.post('/webhooks/orcarail', (req, res) => {
   }
 
   try {
-    // Verify webhook signature and parse event
-    const event = orcarail.webhooks.constructEvent(
+    // Verify the timestamped signature (x-webhook-timestamp + x-webhook-signature-v2) and parse
+    // the event. It also rejects deliveries older than 5 minutes, so a captured request cannot
+    // be replayed.
+    const event = orcarail.webhooks.constructEventFromHeaders(
       req.body,
-      signature,
+      req.headers,
       webhookSecret
     );
 

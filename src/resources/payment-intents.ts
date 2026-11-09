@@ -1,4 +1,5 @@
 import { HttpClient } from '../client';
+import { pathSegment } from '../path-segment';
 import type {
   PaymentIntent,
   PaymentIntentConfirmParams,
@@ -42,7 +43,7 @@ export class PaymentIntents {
    * @returns The Payment Intent
    */
   public async retrieve(id: string): Promise<PaymentIntent> {
-    return this.client.get<PaymentIntent>(`payment_intents/${id}`, true);
+    return this.client.get<PaymentIntent>(`payment_intents/${pathSegment(id)}`, true);
   }
 
   /**
@@ -58,7 +59,7 @@ export class PaymentIntents {
    * const intent = await orcarail.paymentIntents.cancel('20');
    */
   public async cancel(id: string): Promise<PaymentIntent> {
-    return this.client.post<PaymentIntent>(`payment_intents/${id}/cancel`, {}, true);
+    return this.client.post<PaymentIntent>(`payment_intents/${pathSegment(id)}/cancel`, {}, true);
   }
 
   /**
@@ -76,7 +77,7 @@ export class PaymentIntents {
    * });
    */
   public async confirm(id: string, params: PaymentIntentConfirmParams): Promise<PaymentIntent> {
-    return this.client.post<PaymentIntent>(`payment_intents/${id}/confirm`, params, true);
+    return this.client.post<PaymentIntent>(`payment_intents/${pathSegment(id)}/confirm`, params, true);
   }
 
   /**
@@ -95,7 +96,7 @@ export class PaymentIntents {
    * const intent = await orcarail.paymentIntents.complete('34');
    */
   public async complete(id: string): Promise<PaymentIntent> {
-    return this.client.post<PaymentIntent>(`payment_intents/${id}/complete`, {}, true);
+    return this.client.post<PaymentIntent>(`payment_intents/${pathSegment(id)}/complete`, {}, true);
   }
 
   /**
@@ -111,7 +112,7 @@ export class PaymentIntents {
    * const intent = await orcarail.paymentIntents.simulate('34');
    */
   public async simulate(id: string): Promise<PaymentIntent> {
-    return this.client.post<PaymentIntent>(`payment_intents/${id}/simulate`, {}, true);
+    return this.client.post<PaymentIntent>(`payment_intents/${pathSegment(id)}/simulate`, {}, true);
   }
 
   /**
@@ -122,6 +123,6 @@ export class PaymentIntents {
    * @returns The updated Payment Intent
    */
   public async update(id: string, params: PaymentIntentUpdateParams): Promise<PaymentIntent> {
-    return this.client.patch<PaymentIntent>(`payment_intents/${id}`, params, true);
+    return this.client.patch<PaymentIntent>(`payment_intents/${pathSegment(id)}`, params, true);
   }
 }
