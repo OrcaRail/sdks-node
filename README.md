@@ -236,6 +236,8 @@ const intent = await orcarail.paymentIntents.create({
 
 Optional product metadata for tier UIs is typed as `OrcaRailCatalogPlanProductMetadata`; use `parseCatalogPlanMetadata(product.metadata)` when reading `metadata` from the API.
 
+Product and price metadata are public: the catalog route returns them to anyone who has your organization id, which appears on every pay link. Keep private data in payment intent, payment link or subscription metadata, which stay private.
+
 ### Subscriptions
 
 Subscription API methods (create/list/etc.) infer the organization from the authenticated API key.
